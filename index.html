@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-  <title>咪 · 有猫在就不一样</title>
+  <title>拾猫记 · 有猫在就不一样</title>
   <link
     href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="./v4.3.css">
+  <link rel="stylesheet" href="./styles/main.css">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
         <div class="door-window"></div>
       </div>
       <div class="ob-cat" id="ob-cat">
-        <img src="./image/orange1.webp" style="width: 80px; height: auto; object-fit: contain;">
+        <img src="./assets/images/orange1.webp" style="width: 80px; height: auto; object-fit: contain;">
       </div>
     </div>
 
@@ -86,7 +86,7 @@
       </div>
 
       <button class="cat-btn" id="cat-home-btn" onclick="tapCatHome()">
-        <img id="cat-main" class="anim-body" src="./image/orange1.webp"
+        <img id="cat-main" class="anim-body" src="./assets/images/orange1.webp"
           style="width: 210px; height: auto; object-fit: contain; transform-origin: bottom center;">
         <div id="home-particles" style="position:absolute;inset:0;pointer-events:none"></div>
       </button>
@@ -146,7 +146,7 @@
         <div class="pet-hint">轻轻点击猫咪，它会有反应的</div>
         <div class="pet-reward-badge">好感 +2 / 次 &nbsp;🐾</div>
         <button class="pet-cat-btn" onclick="petCat()" style="position:relative">
-          <img id="cat-pet-img" src="./image/orange1.webp" style="width: 170px; height: auto; object-fit: contain; transition: transform 0.15s ease;">
+          <img id="cat-pet-img" src="./assets/images/orange1.webp" style="width: 170px; height: auto; object-fit: contain; transition: transform 0.15s ease;">
           <div id="pet-particles" style="position:absolute;inset:0;pointer-events:none"></div>
         </button>
         <div class="pet-stat">
@@ -380,7 +380,7 @@
     <div class="cust-card">
       <div class="cc-title">👀 预览</div>
       <div class="cat-preview-center">
-        <img id="cat-preview" src="./image/orange1.webp" style="width: 160px; height: auto; object-fit: contain;">
+        <img id="cat-preview" src="./assets/images/orange1.webp" style="width: 160px; height: auto; object-fit: contain;">
       </div>
       <div class="name-row">
         <input class="name-inp" id="name-inp" type="text" placeholder="给猫咪起个名字…" maxlength="6" value="小橘">
@@ -635,7 +635,7 @@
   <!-- ══════════════════════════════════════
      JAVASCRIPT
 ══════════════════════════════════════ -->
-  <script src="./v4.3.js"></script>
+  <script src="./scripts/app.js"></script>
 </body>
 
 </html>

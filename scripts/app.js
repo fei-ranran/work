@@ -15,7 +15,27 @@
       hunger: 100,
       lastHungerUpdate: Date.now(),
     };
-    let S = JSON.parse(localStorage.getItem('mi_state') || 'null') || { ...DEF };
+    const cloneDefaultState = () => JSON.parse(JSON.stringify(DEF));
+    function loadState() {
+      try {
+        const raw = localStorage.getItem('mi_state');
+        if (!raw) return cloneDefaultState();
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === 'object' ? parsed : cloneDefaultState();
+      } catch {
+        try {
+          localStorage.removeItem('mi_state');
+        } catch {}
+        return cloneDefaultState();
+      }
+    }
+    function getLocalDateKey(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+    let S = loadState();
     Object.keys(DEF).forEach(k => { if (!(k in S)) S[k] = DEF[k] });
     if (!S.items) { S.items = { ...DEF.items } }
     Object.keys(DEF.items).forEach(k => { if (!(k in S.items)) S.items[k] = DEF.items[k] });
@@ -26,8 +46,17 @@
     if (S.breed === undefined) S.breed = 'orange';
     if (S.breed === 'duanmao') S.breed = 'garfield';
     if (!S.lastHungerUpdate) S.lastHungerUpdate = Date.now();
+    S.mPlay = false;
 
-    const save = () => { if (!isResetting) localStorage.setItem('mi_state', JSON.stringify(S)); };
+    let isResetting = false;
+    const save = () => {
+      if (isResetting) return;
+      try {
+        localStorage.setItem('mi_state', JSON.stringify(S));
+      } catch {
+        toast('本地数据暂时无法保存');
+      }
+    };
     let saveSoonTmo = null;
     function saveSoon() {
       clearTimeout(saveSoonTmo);
@@ -101,7 +130,7 @@
       applyBreed();
       // 预加载所有品种的互动图片（WebP 仅 ~300KB），确保移动端点击瞬间切换
       ['orange','xianluo','buou','garfield'].forEach(b => {
-        preloadImg(`./image/${b}2.webp`);
+        preloadImg(`./assets/images/${b}2.webp`);
       });
       applySize();
       setTimeTheme();
@@ -283,8 +312,8 @@
       const c = document.getElementById('cat-main');
       if (c) {
         const b = S.breed || 'orange';
-        const happy = `./image/${b}2.webp`;
-        const normal = `./image/${b}1.webp`;
+        const happy = `./assets/images/${b}2.webp`;
+        const normal = `./assets/images/${b}1.webp`;
         preloadImg(happy);
         c.src = happy;
         c.style.animation = 'none';
@@ -310,8 +339,8 @@
         const scales = { small: .72, medium: .85, large: 1 };
         const sc = scales[S.size || 'medium'];
         const b = S.breed || 'orange';
-        const happy = `./image/${b}2.webp`;
-        const normal = `./image/${b}1.webp`;
+        const happy = `./assets/images/${b}2.webp`;
+        const normal = `./assets/images/${b}1.webp`;
         preloadImg(happy);
         petImg.src = happy;
         petImg.style.transform = `scale(${sc * 1.08})`;
@@ -394,7 +423,11 @@
     // ── READING TIMER ──
     let timerInterval = null;
     let sessReward = { 25: 10, 45: 18, 60: 25 };
+    function getSessionReward(mins) {
+      return sessReward[mins] || Math.max(1, Math.floor(mins * 0.4));
+    }
     function setSess(mins, btn) {
+      mins = Math.max(1, Math.min(180, Number(mins) || 25));
       if (btn) {
         const inp = document.getElementById('custom-sess-inp');
         if (inp) inp.value = '';
@@ -403,8 +436,7 @@
       clearInterval(timerInterval);
       document.querySelectorAll('.sess').forEach(b => b.classList.remove('on'));
       if (btn) btn.classList.add('on');
-      let r = sessReward[mins] || Math.floor(mins * 0.4);
-      if (r < 1) r = 1;
+      const r = getSessionReward(mins);
       document.getElementById('timer-note').textContent = `完成后获得 🪙 ${r} 代币`;
       document.getElementById('timer-btn').textContent = '开始';
       renderTimer();
@@ -427,7 +459,7 @@
             clearInterval(timerInterval);
             S.timerOn = false;
             S.timerLeft = S.sessMins * 60;
-            const rwd = sessReward[S.sessMins] || 10;
+            const rwd = getSessionReward(S.sessMins);
             S.coins += rwd; addAff(3); updateHUD(); save();
             toast(`🎉 阅读完成！+${rwd}🪙 · 好感+3`);
             document.getElementById('timer-btn').textContent = '开始';
@@ -468,8 +500,10 @@
         pl.appendChild(d);
       });
     }
-    function selectTrack(i) {
-      S.mTrack = i; S.mPos = 0;
+    function selectTrack(i, resetPosition = true) {
+      i = Math.max(0, Math.min(tracks.length - 1, Number(i) || 0));
+      S.mTrack = i;
+      if (resetPosition) S.mPos = 0;
       const t = tracks[i];
       document.getElementById('m-track').textContent = t.name;
       document.getElementById('m-art').textContent = t.icon;
@@ -530,15 +564,33 @@
     function renderAlarms() {
       const list = document.getElementById('alarm-list');
       if (!list) return;
-      list.innerHTML = '';
+      list.textContent = '';
       S.alarms.forEach((a, i) => {
         const d = document.createElement('div');
         d.className = 'alarm-item';
-        d.innerHTML = `<div><div class="ai-time">${a.time}</div><div class="ai-label">${a.lbl}</div></div>
-    <div class="ai-right">
-      <div class="toggle ${a.on ? 'on' : ''}" onclick="toggleAlarm(${i})"></div>
-      <button class="ai-del" onclick="delAlarm(${i})">✕</button>
-    </div>`;
+
+        const left = document.createElement('div');
+        const time = document.createElement('div');
+        time.className = 'ai-time';
+        time.textContent = a.time;
+        const label = document.createElement('div');
+        label.className = 'ai-label';
+        label.textContent = a.lbl;
+        left.append(time, label);
+
+        const right = document.createElement('div');
+        right.className = 'ai-right';
+        const toggle = document.createElement('div');
+        toggle.className = 'toggle' + (a.on ? ' on' : '');
+        toggle.onclick = () => toggleAlarm(i);
+        const del = document.createElement('button');
+        del.className = 'ai-del';
+        del.type = 'button';
+        del.textContent = '✕';
+        del.onclick = () => delAlarm(i);
+        right.append(toggle, del);
+
+        d.append(left, right);
         list.appendChild(d);
       });
     }
@@ -554,12 +606,19 @@
 
       if (activeAlarms.length > 0) {
         wrap.style.display = 'flex';
-        listCont.innerHTML = activeAlarms.map(a => `
-      <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(74, 66, 104, 0.05); padding: 8px 12px; border-radius: 12px;">
-        <span style="font-size: 12px; font-weight: 700; color: var(--brown2);">${a.lbl || '提醒'}</span>
-        <span style="font-family: 'ZCOOL KuaiLe', cursive; font-size: 16px; color: #4A4268;">${a.time}</span>
-      </div>
-    `).join('');
+        listCont.textContent = '';
+        activeAlarms.forEach(a => {
+          const row = document.createElement('div');
+          row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;background:rgba(74,66,104,0.05);padding:8px 12px;border-radius:12px;';
+          const label = document.createElement('span');
+          label.style.cssText = 'font-size:12px;font-weight:700;color:var(--brown2);';
+          label.textContent = a.lbl || '提醒';
+          const time = document.createElement('span');
+          time.style.cssText = "font-family:'ZCOOL KuaiLe', cursive;font-size:16px;color:#4A4268;";
+          time.textContent = a.time;
+          row.append(label, time);
+          listCont.appendChild(row);
+        });
       } else {
         wrap.style.display = 'none';
       }
@@ -604,7 +663,7 @@
     function addTask() {
       const inp = document.getElementById('task-inp');
       const txt = inp.value.trim(); if (!txt) return;
-      const key = selectedDate || new Date().toISOString().slice(0, 10);
+      const key = selectedDate || getLocalDateKey();
       if (!S.tasks[key]) S.tasks[key] = [];
       S.tasks[key].push({ txt, done: false, id: Date.now() });
       inp.value = '';
@@ -618,7 +677,7 @@
       const inp = document.getElementById('home-task-inp');
       const txt = inp.value.trim();
       if (!txt) return;
-      const key = new Date().toISOString().slice(0, 10);
+      const key = getLocalDateKey();
       if (!S.tasks[key]) S.tasks[key] = [];
       S.tasks[key].push({ txt, done: false, id: Date.now() });
       inp.value = '';
@@ -631,20 +690,37 @@
     }
 
     // 渲染日历里的任务
+    function createTaskItem(key, task, index) {
+      const d = document.createElement('div');
+      d.className = 'task-item';
+
+      const chk = document.createElement('div');
+      chk.className = 'task-chk' + (task.done ? ' done' : '');
+      chk.textContent = task.done ? '✓' : '';
+      chk.onclick = event => toggleTask(key, index, event);
+
+      const txt = document.createElement('span');
+      txt.className = 'task-txt' + (task.done ? ' done' : '');
+      txt.textContent = task.txt;
+
+      const del = document.createElement('button');
+      del.className = 'task-del-btn';
+      del.type = 'button';
+      del.textContent = '✕';
+      del.onclick = () => delTask(key, index);
+
+      d.append(chk, txt, del);
+      return d;
+    }
     function renderTaskList() {
       const list = document.getElementById('task-list');
       if (!list) return;
-      list.innerHTML = '';
-      const key = selectedDate || new Date().toISOString().slice(0, 10);
+      list.textContent = '';
+      const key = selectedDate || getLocalDateKey();
       const tasks = S.tasks[key] || [];
       if (!tasks.length) { list.innerHTML = '<div style="text-align:center;color:var(--brown3);font-size:12px;font-weight:600;padding:12px">这一天还没有计划，加一个吧～</div>'; return; }
       tasks.forEach((t, i) => {
-        const d = document.createElement('div');
-        d.className = 'task-item';
-        d.innerHTML = `<div class="task-chk ${t.done ? 'done' : ''}" onclick="toggleTask('${key}',${i},event)">${t.done ? '✓' : ''}</div>
-    <span class="task-txt ${t.done ? 'done' : ''}">${t.txt}</span>
-    <button class="task-del-btn" onclick="delTask('${key}',${i})">✕</button>`;
-        list.appendChild(d);
+        list.appendChild(createTaskItem(key, t, i));
       });
     }
 
@@ -652,7 +728,7 @@
     function renderHomeTasks() {
       const list = document.getElementById('home-task-list');
       if (!list) return;
-      const key = new Date().toISOString().slice(0, 10);
+      const key = getLocalDateKey();
       const tasks = S.tasks[key] || [];
 
       if (!tasks.length) {
@@ -660,13 +736,10 @@
         return;
       }
 
-      list.innerHTML = tasks.map((t, i) => `
-    <div class="task-item">
-      <div class="task-chk ${t.done ? 'done' : ''}" onclick="toggleTask('${key}',${i},event)">${t.done ? '✓' : ''}</div>
-      <span class="task-txt ${t.done ? 'done' : ''}">${t.txt}</span>
-      <button class="task-del-btn" onclick="delTask('${key}',${i})">✕</button>
-    </div>
-  `).join('');
+      list.textContent = '';
+      tasks.forEach((t, i) => {
+        list.appendChild(createTaskItem(key, t, i));
+      });
     }
 
     // 勾选/取消任务
@@ -736,6 +809,12 @@
 
     // ── DAY LOG ──
 
+    function updateDayLog() {
+      const list = document.getElementById('day-log-list');
+      if (!list) return;
+      list.textContent = '';
+    }
+
 
     // ── CUSTOMIZE ──
     function applyColors() {
@@ -747,13 +826,13 @@
     function applyBreed() {
       const b = S.breed || 'orange';
       const mainCat = document.getElementById('cat-main');
-      if (mainCat) mainCat.src = `./image/${b}1.webp`;
+      if (mainCat) mainCat.src = `./assets/images/${b}1.webp`;
       const petCat = document.getElementById('cat-pet-img');
-      if (petCat) petCat.src = `./image/${b}1.webp`;
+      if (petCat) petCat.src = `./assets/images/${b}1.webp`;
       const previewCat = document.getElementById('cat-preview');
-      if (previewCat) previewCat.src = `./image/${b}1.webp`;
+      if (previewCat) previewCat.src = `./assets/images/${b}1.webp`;
       const obCat = document.querySelector('#ob-cat img');
-      if (obCat) obCat.src = `./image/${b}1.webp`;
+      if (obCat) obCat.src = `./assets/images/${b}1.webp`;
 
       // 同步高亮显示对应的品种卡片
       document.querySelectorAll('.swatch-wrap').forEach(w => {
@@ -849,7 +928,7 @@
 
     // ── TASK CARRY-OVER ──
     function checkTaskCarryOver() {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = getLocalDateKey();
       let pendingTasks = [];
       let oldDates = [];
 
@@ -920,7 +999,7 @@
       if (name === 'alarm') tickClock();
       if (name === 'calendar') { renderCalendar(); renderTaskList(); }
       if (name === 'notes') { document.getElementById('note-ta').value = S.notes || ''; }
-      if (name === 'music') { renderPlaylist(); selectTrack(S.mTrack); }
+      if (name === 'music') { renderPlaylist(); selectTrack(S.mTrack, false); }
       renderTimer();
     }
     function closeModal(name) { document.getElementById('m-' + name).classList.remove('on'); }
@@ -944,7 +1023,6 @@
     }
 
     // ── DEV RESET ──
-    let isResetting = false;
     function devReset() {
       if (!confirm('重置所有数据并返回欢迎界面？')) return;
       isResetting = true;
