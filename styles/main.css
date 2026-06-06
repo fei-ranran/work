@@ -583,7 +583,7 @@
       border: none;
       padding: 0;
       transition: transform .12s;
-      filter: drop-shadow(0 12px 28px rgba(61, 32, 16, 0.12));
+      filter: none;
       position: relative;
     }
 
@@ -812,7 +812,7 @@
     /* 饥饿状态动画 - 只在非常饿时摇晃 */
     #cat-main.starving {
       animation: sad-sway 2s ease-in-out infinite;
-      filter: grayscale(30%) brightness(0.95);
+      filter: none;
     }
 
     @keyframes sad-sway {
@@ -915,7 +915,7 @@
       cursor: pointer;
       background: none;
       border: none;
-      filter: drop-shadow(0 8px 20px rgba(61, 32, 16, 0.10));
+      filter: none;
       position: relative;
       transition: transform .12s;
     }
@@ -2220,6 +2220,13 @@
       background: linear-gradient(160deg, #1A1428 0%, #2C2040 100%)
     }
 
+    body.night #s-home {
+      background:
+        linear-gradient(rgba(26, 20, 40, 0.70), rgba(26, 20, 40, 0.78)),
+        url('../assets/images/background.webp') center top / cover no-repeat,
+        #1A1428;
+    }
+
     body.night .time-word,
     body.night .aff-level-badge,
     body.night .cat-name-tag,
@@ -2232,6 +2239,29 @@
     body.night .day-log {
       background: rgba(255, 255, 255, 0.07);
       border-color: rgba(255, 255, 255, 0.06)
+    }
+
+    body.night .time-word,
+    body.night .time-sub,
+    body.night .cat-name-tag,
+    body.night .ht-title,
+    body.night .ht-date {
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+    }
+
+    body.night .aff-strip {
+      background: rgba(20, 14, 30, 0.42);
+      border-color: rgba(255, 240, 210, 0.12);
+    }
+
+    body.night .hunger-bar-wrap {
+      background: rgba(20, 14, 30, 0.42) !important;
+      border-color: rgba(255, 240, 210, 0.12) !important;
+    }
+
+    body.night .hunger-bar-wrap > span:first-child {
+      color: rgba(255, 240, 210, 0.9) !important;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
     }
 
     body.night .dl-text {
@@ -2253,8 +2283,9 @@
 
     /* Night mode - Home Todo overrides */
     body.night .home-todo {
-      background: rgba(255, 255, 255, 0.07);
-      border-color: rgba(255, 255, 255, 0.06);
+      background: rgba(20, 14, 30, 0.58);
+      border-color: rgba(255, 240, 210, 0.12);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.20);
     }
 
     body.night .ht-title {
@@ -2283,6 +2314,166 @@
 
     body.night .task-txt.done {
       color: rgba(255, 240, 210, 0.4);
+    }
+
+    body.night #s-interact {
+      background:
+        linear-gradient(rgba(26, 20, 40, 0.70), rgba(26, 20, 40, 0.78)),
+        url('../assets/images/background.webp') center top / cover no-repeat,
+        #1A1428;
+    }
+
+    body.night #s-feat,
+    body.night #s-shop,
+    body.night #s-cust {
+      background: linear-gradient(160deg, #1A1428 0%, #2C2040 100%);
+    }
+
+    body.night .isc-title,
+    body.night .feat-header,
+    body.night .shop-h1,
+    body.night .cust-h1,
+    body.night .cc-title,
+    body.night .fcn,
+    body.night .scn,
+    body.night .fc-name,
+    body.night .pc-name,
+    body.night .mtitle,
+    body.night .pl-t,
+    body.night .ai-time,
+    body.night .cal-month-lbl {
+      color: rgba(255, 240, 210, 0.9);
+    }
+
+    body.night .isc-aff,
+    body.night .feat-sub,
+    body.night .shop-sub,
+    body.night .shop-sec-title,
+    body.night .fcd,
+    body.night .scs,
+    body.night .fc-desc,
+    body.night .pc-need,
+    body.night .pet-hint,
+    body.night .pet-count-text,
+    body.night .sw-label,
+    body.night .pl-n,
+    body.night .pl-d,
+    body.night .ai-label,
+    body.night .cal-wd,
+    body.night .note-wc {
+      color: rgba(255, 240, 210, 0.62);
+    }
+
+    body.night .isc-title,
+    body.night .feat-header,
+    body.night .shop-h1,
+    body.night .cust-h1,
+    body.night .cc-title,
+    body.night .fcn,
+    body.night .scn,
+    body.night .fc-name,
+    body.night .pc-name {
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.38);
+    }
+
+    body.night .tab-row,
+    body.night .pet-stage,
+    body.night .food-card,
+    body.night .play-card,
+    body.night .feat-card,
+    body.night .shop-card,
+    body.night .cust-card,
+    body.night .msheet,
+    body.night .pl-item,
+    body.night .alarm-item {
+      background: rgba(20, 14, 30, 0.58);
+      border-color: rgba(255, 240, 210, 0.12);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.18);
+    }
+
+    body.night .tab-row {
+      background: rgba(20, 14, 30, 0.42);
+    }
+
+    body.night .itab,
+    body.night .sz-btn,
+    body.night .vc-btn,
+    body.night .sess {
+      color: rgba(255, 240, 210, 0.66);
+      border-color: rgba(255, 240, 210, 0.12);
+    }
+
+    body.night .itab.on,
+    body.night .sz-btn.on,
+    body.night .vc-btn.on,
+    body.night .sess.on {
+      background: rgba(255, 240, 210, 0.12);
+      color: rgba(255, 240, 210, 0.94);
+      border-color: rgba(255, 240, 210, 0.24);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
+    }
+
+    body.night .shop-sec-title::after {
+      background: rgba(255, 240, 210, 0.12);
+    }
+
+    body.night .shop-wallet,
+    body.night .pet-reward-badge,
+    body.night .fce,
+    body.night .scp {
+      background: rgba(246, 196, 92, 0.14) !important;
+      border-color: rgba(246, 196, 92, 0.20);
+      color: #F6D27B !important;
+    }
+
+    body.night .fc-price {
+      color: #F6D27B;
+    }
+
+    body.night .name-inp,
+    body.night .alarm-inp,
+    body.night .note-ta {
+      background: rgba(0, 0, 0, 0.22);
+      border-color: rgba(255, 240, 210, 0.14);
+      color: rgba(255, 250, 240, 0.92);
+    }
+
+    body.night .name-inp::placeholder,
+    body.night .alarm-inp::placeholder,
+    body.night .task-inp::placeholder,
+    body.night .note-ta::placeholder {
+      color: rgba(255, 240, 210, 0.36);
+    }
+
+    body.night .moverlay {
+      background: rgba(7, 5, 12, 0.62);
+    }
+
+    body.night .mhandle {
+      background: rgba(255, 240, 210, 0.20);
+    }
+
+    body.night .mclose,
+    body.night .cal-nav-btn {
+      background: rgba(255, 240, 210, 0.10);
+      color: rgba(255, 240, 210, 0.78);
+    }
+
+    body.night .pl-item.on {
+      background: rgba(196, 128, 106, 0.18);
+      border-color: rgba(196, 128, 106, 0.28);
+    }
+
+    body.night .cal-d {
+      color: rgba(255, 240, 210, 0.78);
+    }
+
+    body.night .cal-d:hover {
+      background: rgba(255, 240, 210, 0.10);
+    }
+
+    body.night .cal-d.other {
+      color: rgba(255, 240, 210, 0.28);
     }
 
     /* Stars */
@@ -2328,3 +2519,58 @@
       font-family: 'Nunito', sans-serif
     }
   
+@font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('../assets/fonts/Nunito-400.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('../assets/fonts/Nunito-500.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('../assets/fonts/Nunito-600.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('../assets/fonts/Nunito-700.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 800;
+      font-display: swap;
+      src: url('../assets/fonts/Nunito-800.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 900;
+      font-display: swap;
+      src: url('../assets/fonts/Nunito-900.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'ZCOOL KuaiLe';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('../assets/fonts/ZCOOL-KuaiLe-Regular.ttf') format('truetype');
+    }
