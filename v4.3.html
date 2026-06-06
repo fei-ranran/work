@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>咪 · 有猫在就不一样</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./v4.3.css">
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════
+     ONBOARDING
+══════════════════════════════════════ -->
+  <div id="ob">
+    <div class="rain-wrap" id="rain"></div>
+    <div class="door-scene">
+      <div class="door">
+        <div class="door-glow"></div>
+        <div class="door-knob"></div>
+        <div class="door-window"></div>
+      </div>
+      <div class="ob-cat" id="ob-cat">
+        <img src="./image/orange1.webp" style="width: 80px; height: auto; object-fit: contain;">
+      </div>
+    </div>
+
+    <div class="ob-text-area">
+      <p class="ob-line" id="ob0">你本以为日子会就这样</p>
+      <p class="ob-line dim" id="ob1">平淡、无趣、重复地过下去</p>
+      <p class="ob-line" id="ob2">直到那天晚上你回家——</p>
+      <p class="ob-line" id="ob3">门口蹲着一只小猫</p>
+      <p class="ob-line dim" id="ob4">它望着你，轻轻地叫了一声</p>
+    </div>
+
+    <div id="ob-name-step">
+      <p class="ob-name-label">给它起个名字吧</p>
+      <input class="ob-name-inp" id="ob-name-inp" type="text" placeholder="小橘 / 咪咪 / 豆豆..." maxlength="6">
+      <button class="ob-start-btn" onclick="startApp()">带它回家 🐾</button>
+    </div>
+  </div>
+
+  <!-- Stars layer -->
+  <div class="stars" id="stars-layer"></div>
+
+  <!-- ══════════════════════════════════════
+     HOME SCREEN
+══════════════════════════════════════ -->
+  <div class="screen" id="s-home">
+
+    <div class="time-banner">
+      <div class="tb-left">
+        <div class="time-word" id="time-word">清晨</div>
+        <div class="time-sub" id="time-sub">今天也要好好过 ·͜·</div>
+      </div>
+      <div class="coin-chip">
+        <span class="coin-icon">★</span>
+        <span class="coin-val" id="coin-display">50</span>
+      </div>
+    </div>
+
+    <div class="aff-strip">
+      <div class="aff-hearts-row" id="aff-hearts"></div>
+      <span class="aff-pct" id="aff-pct">0%</span>
+      <span class="aff-level-badge" id="aff-badge">流浪猫</span>
+    </div>
+
+    <!-- 新增：饥饿度条 -->
+    <div class="hunger-bar-wrap"
+      style="margin: 8px 22px 0; background: var(--cream2); border-radius: 50px; padding: 4px 12px; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(61,32,16,0.06);">
+      <span style="font-size: 12px; font-weight: 800; color: var(--brown3); white-space: nowrap;">能量状态</span>
+      <div style="flex: 1; height: 6px; background: rgba(61,32,16,0.1); border-radius: 3px; overflow: hidden;">
+        <div id="hunger-fill" style="height: 100%; background: var(--sage); width: 100%; transition: width 0.5s;"></div>
+      </div>
+      <span id="hunger-label"
+        style="font-size: 12px; font-weight: 700; color: var(--sage); min-width: 72px; text-align: right;">饱饱的 ✨</span>
+    </div>
+
+    <div class="cat-zone">
+      <div class="bubble-wrap">
+        <div class="speech-bub" id="speech-bub">喵……</div>
+      </div>
+
+      <button class="cat-btn" id="cat-home-btn" onclick="tapCatHome()">
+        <img id="cat-main" class="anim-body" src="./image/orange1.webp"
+          style="width: 210px; height: auto; object-fit: contain; transform-origin: bottom center;">
+        <div id="home-particles" style="position:absolute;inset:0;pointer-events:none"></div>
+      </button>
+
+      <div class="cat-name-tag" id="cat-name-tag">小橘</div>
+    </div>
+
+    <!-- 新增的：主页待办模块 -->
+    <div class="home-todo" id="home-todo">
+      <div class="ht-header">
+        <div class="ht-title">📋 今日待办</div>
+        <div class="ht-date" id="ht-date"></div>
+      </div>
+      <div class="task-add-row" style="margin-bottom:12px">
+        <input class="task-inp" id="home-task-inp" type="text" placeholder="添加今日任务，完成+2🪙…">
+        <button class="task-add-btn" onclick="addHomeTask()">添加</button>
+      </div>
+      <div class="task-list" id="home-task-list">
+        <!-- 主页任务列表 -->
+      </div>
+      <!-- 移动到此：主页最近闹钟列表 -->
+      <div id="home-alarm-wrap"
+        style="display: none; margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(61,32,16,0.1); flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+          <span style="font-size: 14px;">⏰</span>
+          <span
+            style="font-size: 12px; font-weight: 800; color: var(--brown3); letter-spacing: 1px; text-transform: uppercase;">闹钟</span>
+        </div>
+        <div id="home-alarm-list" style="display: flex; flex-direction: column; gap: 6px;">
+          <!-- 闹钟列表将渲染在此 -->
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <!-- ══════════════════════════════════════
+     INTERACT SCREEN
+══════════════════════════════════════ -->
+  <div class="screen" id="s-interact">
+    <div class="isc-header">
+      <div class="isc-title">和 <span id="i-cat-name">小橘</span> 在一起</div>
+      <div class="isc-aff">好感 <span id="i-aff">0</span>/100</div>
+    </div>
+
+    <div class="tab-row">
+      <button class="itab on" onclick="switchItab('pet',this)">🤚 抚摸</button>
+      <button class="itab" onclick="switchItab('feed',this)">🐟 喂食</button>
+      <button class="itab" onclick="switchItab('play',this)">🎾 玩耍</button>
+    </div>
+
+    <!-- PET -->
+    <div class="ipanel on" id="ip-pet">
+      <div class="pet-stage">
+        <div class="pet-hint">轻轻点击猫咪，它会有反应的</div>
+        <div class="pet-reward-badge">好感 +2 / 次 &nbsp;🐾</div>
+        <button class="pet-cat-btn" onclick="petCat()" style="position:relative">
+          <img id="cat-pet-img" src="./image/orange1.webp" style="width: 170px; height: auto; object-fit: contain; transition: transform 0.15s ease;">
+          <div id="pet-particles" style="position:absolute;inset:0;pointer-events:none"></div>
+        </button>
+        <div class="pet-stat">
+          <div class="pet-count-text">今日已抚摸 <span id="pet-count">0</span> 次</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEED -->
+    <div class="ipanel" id="ip-feed">
+      <div class="food-grid">
+        <div class="food-card" onclick="feed('fish')">
+          <div class="fc-icon">🐟</div>
+          <div class="fc-name">小鱼干</div>
+          <div class="fc-desc">猫咪最爱的零食，随时可以给</div>
+          <div class="fc-bottom">
+            <span class="fc-price">免费</span>
+            <span class="fc-aff">+5 ♥</span>
+            <span id="fst-fish" class="fc-stock">库存:3</span>
+          </div>
+        </div>
+        <div class="food-card" onclick="feed('milk')">
+          <div class="fc-icon">🥛</div>
+          <div class="fc-name">猫用牛奶</div>
+          <div class="fc-desc">无乳糖配方，对猫咪友好</div>
+          <div class="fc-bottom">
+            <span class="fc-price">免费</span>
+            <span class="fc-aff">+3 ♥</span>
+            <span id="fst-milk" class="fc-stock">库存:2</span>
+          </div>
+        </div>
+        <div class="food-card" onclick="feed('treat')">
+          <div class="fc-icon">🍬</div>
+          <div class="fc-name">猫咪零食</div>
+          <div class="fc-desc">特殊配方，猫咪超级喜欢</div>
+          <div class="fc-bottom">
+            <span class="fc-price">5🪙</span>
+            <span class="fc-aff">+4 ♥</span>
+            <span id="fst-treat" class="fc-empty">库存:0</span>
+          </div>
+        </div>
+        <div class="food-card" onclick="feed('cake')">
+          <div class="fc-icon">🎂</div>
+          <div class="fc-name">生日蛋糕</div>
+          <div class="fc-desc">特别的日子用，满满爱意</div>
+          <div class="fc-bottom">
+            <span class="fc-price">20🪙</span>
+            <span class="fc-aff">+10 ♥</span>
+            <span id="fst-cake" class="fc-empty">库存:0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAY -->
+    <div class="ipanel" id="ip-play">
+      <div class="play-grid">
+        <div class="play-card" onclick="play('ball')">
+          <div class="pc-icon">🎾</div>
+          <div class="pc-name">扔球玩耍</div>
+          <div class="pc-need">消耗 1 网球</div>
+          <div class="pc-aff">好感 +4 ♥</div>
+          <div id="pst-ball" class="pc-stock">库存:1</div>
+        </div>
+        <div class="play-card" onclick="play('yarn')">
+          <div class="pc-icon">🧶</div>
+          <div class="pc-name">追毛线球</div>
+          <div class="pc-need">消耗 1 毛线球</div>
+          <div class="pc-aff">好感 +3 ♥</div>
+          <div id="pst-yarn" class="pc-stock">库存:0</div>
+        </div>
+        <div class="play-card" onclick="play('laser')">
+          <div class="pc-icon">🔴</div>
+          <div class="pc-name">激光笔逗猫</div>
+          <div class="pc-need">消耗 1 激光笔</div>
+          <div class="pc-aff">好感 +6 ♥</div>
+          <div id="pst-laser" class="pc-stock">库存:0</div>
+        </div>
+        <div class="play-card" onclick="play('free')">
+          <div class="pc-icon">✋</div>
+          <div class="pc-name">徒手逗猫</div>
+          <div class="pc-need">随时可用 ∞</div>
+          <div class="pc-aff">好感 +1 ♥</div>
+          <div class="pc-stock">不限量</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     FEATURES SCREEN
+══════════════════════════════════════ -->
+  <div class="screen" id="s-feat">
+    <div class="feat-header">功能中心</div>
+    <div class="feat-sub">使用这些功能获取代币，用代币换取与猫咪互动的机会</div>
+    <div class="feat-grid">
+      <div class="feat-card" onclick="openModal('reading')" style="color:#C8714A">
+        <div class="fci">📖</div>
+        <div class="fcn">专注阅读</div>
+        <div class="fcd">设定读书时间，<br>完成后解锁专属互动</div>
+        <div class="fce">🪙 每25分钟 +10</div>
+      </div>
+      <div class="feat-card" onclick="openModal('music')" style="color:#7A6B9E">
+        <div class="fci">🎵</div>
+        <div class="fcn">轻音乐</div>
+        <div class="fcd">舒缓的旋律，<br>让猫咪也放松下来</div>
+        <div class="fce">🪙 每30分钟 +5</div>
+      </div>
+      <div class="feat-card" onclick="openModal('alarm')" style="color:#4A84C4">
+        <div class="fci">⏰</div>
+        <div class="fcn">智能闹钟</div>
+        <div class="fcd">让猫咪在清晨<br>温柔地叫醒你</div>
+        <div class="fce">🪙 按时起床 +5</div>
+      </div>
+      <div class="feat-card" onclick="openModal('calendar')" style="color:#7A9E7E">
+        <div class="fci">📅</div>
+        <div class="fcn">日历行程</div>
+        <div class="fcd">记录每日计划，<br>不错过生活的细节</div>
+        <div class="fce">🪙 完成任务 +2</div>
+      </div>
+      <div class="feat-card" onclick="openModal('notes')" style="color:#C8943A">
+        <div class="fci">📝</div>
+        <div class="fcn">灵感笔记</div>
+        <div class="fcd">把那些一闪而过的<br>念头记下来</div>
+        <div class="fce">🪙 每次保存 +2</div>
+      </div>
+      <div class="feat-card" onclick="toast('🌙 睡眠助手即将到来～')" style="color:#4A5580">
+        <div class="fci">🌙</div>
+        <div class="fcn">睡眠助手</div>
+        <div class="fcd">白噪音与故事<br>帮你安然入睡</div>
+        <div class="fce" style="background:var(--cream2);color:var(--brown3)">即将上线</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     SHOP SCREEN
+══════════════════════════════════════ -->
+  <div class="screen" id="s-shop">
+    <div class="shop-header">
+      <div class="shop-h1">喵喵商店</div>
+      <div class="shop-wallet">🪙 <span id="shop-coins">50</span></div>
+    </div>
+    <div class="shop-sub">用日常积累的代币，换取与猫咪的美好时光</div>
+
+    <div class="shop-sec">
+      <div class="shop-sec-title">🍽 食物</div>
+      <div class="shop-grid">
+        <div class="shop-card" onclick="buy('fish',5,3,'fish')">
+          <div class="sci">🐟</div>
+          <div class="scn">小鱼干 ×3</div>
+          <div class="scp">🪙 5</div>
+          <div class="scs">已有:<span id="si-fish">3</span></div>
+        </div>
+        <div class="shop-card" onclick="buy('milk',8,2,'milk')">
+          <div class="sci">🥛</div>
+          <div class="scn">猫用牛奶 ×2</div>
+          <div class="scp">🪙 8</div>
+          <div class="scs">已有:<span id="si-milk">2</span></div>
+        </div>
+        <div class="shop-card" onclick="buy('treat',12,2,'treat')">
+          <div class="sci">🍬</div>
+          <div class="scn">猫咪零食 ×2</div>
+          <div class="scp">🪙 12</div>
+          <div class="scs">已有:<span id="si-treat">0</span></div>
+        </div>
+        <div class="shop-card" onclick="buy('cake',20,1,'cake')">
+          <div class="sci">🎂</div>
+          <div class="scn">生日蛋糕</div>
+          <div class="scp">🪙 20</div>
+          <div class="scs">已有:<span id="si-cake">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shop-sec">
+      <div class="shop-sec-title">🎮 玩具</div>
+      <div class="shop-grid">
+        <div class="shop-card" onclick="buy('ball',10,2,'ball')">
+          <div class="sci">🎾</div>
+          <div class="scn">网球 ×2</div>
+          <div class="scp">🪙 10</div>
+          <div class="scs">已有:<span id="si-ball">1</span></div>
+        </div>
+        <div class="shop-card" onclick="buy('yarn',8,2,'yarn')">
+          <div class="sci">🧶</div>
+          <div class="scn">毛线球 ×2</div>
+          <div class="scp">🪙 8</div>
+          <div class="scs">已有:<span id="si-yarn">0</span></div>
+        </div>
+        <div class="shop-card" onclick="buy('laser',15,1,'laser')">
+          <div class="sci">🔴</div>
+          <div class="scn">激光笔</div>
+          <div class="scp">🪙 15</div>
+          <div class="scs">已有:<span id="si-laser">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shop-sec">
+      <div class="shop-sec-title">✨ 特别礼物</div>
+      <div class="shop-grid">
+        <div class="shop-card" onclick="buy('bow',30,1,'bow')">
+          <div class="sci">🎀</div>
+          <div class="scn">蝴蝶结</div>
+          <div class="scp">🪙 30</div>
+          <div class="scs">已有:<span id="si-bow">0</span></div>
+        </div>
+        <div class="shop-card" onclick="buy('crown',50,1,'crown')">
+          <div class="sci">👑</div>
+          <div class="scn">猫咪皇冠</div>
+          <div class="scp">🪙 50</div>
+          <div class="scs">已有:<span id="si-crown">0</span></div>
+        </div>
+        <div class="shop-card" onclick="buy('bed',40,1,'bed')">
+          <div class="sci">🛏</div>
+          <div class="scn">豪华猫窝</div>
+          <div class="scp">🪙 40</div>
+          <div class="scs">已有:<span id="si-bed">0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     CUSTOMIZE SCREEN
+══════════════════════════════════════ -->
+  <div class="screen" id="s-cust">
+    <div class="cust-h1">自定义你的猫咪</div>
+
+    <div class="cust-card">
+      <div class="cc-title">👀 预览</div>
+      <div class="cat-preview-center">
+        <img id="cat-preview" src="./image/orange1.webp" style="width: 160px; height: auto; object-fit: contain;">
+      </div>
+      <div class="name-row">
+        <input class="name-inp" id="name-inp" type="text" placeholder="给猫咪起个名字…" maxlength="6" value="小橘">
+        <button class="name-save" onclick="saveName()">保存</button>
+      </div>
+    </div>
+
+    <div class="cust-card">
+      <div class="cc-title">🐱 猫咪品种</div>
+      <div class="swatch-row" id="breed-swatches">
+        <div class="swatch-wrap" data-breed="orange" onclick="setBreed('orange',this)">
+          <div class="swatch" style="background:linear-gradient(135deg, #FFB07C, #C8714A)"></div>
+          <div class="sw-label">橘猫</div>
+        </div>
+        <div class="swatch-wrap" data-breed="xianluo" onclick="setBreed('xianluo',this)">
+          <div class="swatch" style="background:linear-gradient(135deg, #EADBC8, #8B7E74)"></div>
+          <div class="sw-label">暹罗猫</div>
+        </div>
+        <div class="swatch-wrap" data-breed="buou" onclick="setBreed('buou',this)">
+          <div class="swatch" style="background:linear-gradient(135deg, #F9F5F6, #8EACCD)"></div>
+          <div class="sw-label">布偶猫</div>
+        </div>
+        <div class="swatch-wrap" data-breed="garfield" onclick="setBreed('garfield',this)">
+          <div class="swatch" style="background:linear-gradient(135deg, #CCD1D9, #5D6D7E)"></div>
+          <div class="sw-label">加菲猫</div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="cust-card">
+      <div class="cc-title">📏 体型</div>
+      <div class="size-row">
+        <button class="sz-btn" onclick="setSize('small',this)">🐱 小猫咪</button>
+        <button class="sz-btn on" onclick="setSize('medium',this)">😸 正常</button>
+        <button class="sz-btn" onclick="setSize('large',this)">😻 肥宅猫</button>
+      </div>
+    </div>
+
+    <div class="cust-card">
+      <div class="cc-title">🔊 配音风格</div>
+      <div class="voice-row">
+        <button class="vc-btn on" onclick="setVoice('cute',this)">🌸 软萌</button>
+        <button class="vc-btn" onclick="setVoice('cool',this)">😎 傲娇</button>
+        <button class="vc-btn" onclick="setVoice('baby',this)">👶 幼猫</button>
+        <button class="vc-btn" onclick="setVoice('wise',this)">🧙 老猫</button>
+      </div>
+    </div>
+
+    <!-- 开发者选项 -->
+    <div class="cust-card" style="border:1.5px dashed rgba(61,32,16,0.15);background:var(--cream2)">
+      <div class="cc-title" style="color:var(--brown3);font-size:12px;letter-spacing:1px">⚙️ 开发者选项</div>
+      <p style="font-size:11px;color:var(--brown3);font-weight:600;margin-bottom:12px;line-height:1.6">
+        重置所有数据并返回欢迎界面，用于演示和测试。</p>
+      <button onclick="devReset()" style="
+      width:100%;padding:11px;border:1.5px solid rgba(180,60,40,0.3);
+      border-radius:var(--r);background:rgba(180,60,40,0.05);
+      font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;
+      color:#A03020;cursor:pointer;transition:all .2s;
+    " onmouseover="this.style.background='rgba(180,60,40,0.1)'"
+        onmouseout="this.style.background='rgba(180,60,40,0.05)'">
+        🔄 重置并返回欢迎界面
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     NAV BAR
+══════════════════════════════════════ -->
+  <nav id="nav">
+    <button class="nb on" id="nb-home" onclick="switchScreen('home',this)">
+      <div class="ni">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+        </svg>
+      </div>
+      <div class="nl">首页</div>
+    </button>
+    <button class="nb" id="nb-interact" onclick="switchScreen('interact',this)">
+      <div class="ni">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+          <path
+            d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+        </svg>
+      </div>
+      <div class="nl">互动</div>
+    </button>
+    <button class="nb-center" id="nb-center" onclick="switchScreen('feat',null)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="26" height="26">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="16" />
+        <line x1="8" y1="12" x2="16" y2="12" />
+      </svg>
+    </button>
+    <button class="nb" id="nb-shop" onclick="switchScreen('shop',this)">
+      <div class="ni">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
+        </svg>
+      </div>
+      <div class="nl">商店</div>
+    </button>
+    <button class="nb" id="nb-cust" onclick="switchScreen('cust',this)">
+      <div class="ni">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+          <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+        </svg>
+      </div>
+      <div class="nl">自定义</div>
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+     MODALS
+══════════════════════════════════════ -->
+
+  <!-- Reading -->
+  <div class="moverlay" id="m-reading" onclick="closeModalIfBg(event,'reading')">
+    <div class="msheet">
+      <div class="mhandle"></div>
+      <div class="mhead">
+        <div class="mtitle">📖 专注阅读</div>
+        <button class="mclose" onclick="closeModal('reading')">✕</button>
+      </div>
+      <div class="mbody">
+        <div class="session-btns">
+          <button class="sess on" onclick="setSess(25,this)">25 分钟</button>
+          <button class="sess" onclick="setSess(45,this)">45 分钟</button>
+          <input type="number" id="custom-sess-inp" placeholder="自定义(分)"
+            style="flex:1; width: 70px; padding: 8px; border: 1.5px solid var(--cream3); border-radius: 50px; text-align: center; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 12px; color: var(--brown); background: none; outline: none;"
+            min="1" max="180" onchange="setSess(parseInt(this.value) || 25, null)">
+        </div>
+        <div class="timer-face">
+          <div class="timer-num" id="timer-display">25:00</div>
+          <div class="timer-lbl">专注计时中 · 猫咪也在陪你</div>
+        </div>
+        <div class="timer-note" id="timer-note">完成后获得 🪙 10 代币</div>
+        <div class="timer-btns">
+          <button class="tbtn tbtn-reset" onclick="resetTimer()">重置</button>
+          <button class="tbtn tbtn-start" id="timer-btn" onclick="toggleTimer()">开始</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music -->
+  <div class="moverlay" id="m-music" onclick="closeModalIfBg(event,'music')">
+    <div class="msheet">
+      <div class="mhandle"></div>
+      <div class="mhead">
+        <div class="mtitle">🎵 轻音乐</div>
+        <button class="mclose" onclick="closeModal('music')">✕</button>
+      </div>
+      <div class="mbody">
+        <div class="music-wrap">
+          <div class="music-art" id="m-art" style="background:linear-gradient(135deg,#7B6BA0,#4A4268)">🎵</div>
+          <div class="music-info">
+            <div class="m-track" id="m-track">雨天的咖啡馆</div>
+            <div class="m-artist">轻音乐 · 放松系列</div>
+          </div>
+          <div class="m-prog" onclick="seekMusic(event)">
+            <div class="m-fill" id="m-fill" style="width:0%"></div>
+          </div>
+          <div class="m-times"><span id="m-cur">0:00</span><span id="m-tot">3:24</span></div>
+          <div class="m-ctrls">
+            <button class="m-ctrl" onclick="prevTrack()">⏮</button>
+            <button class="m-play" id="m-playbtn" onclick="toggleMusic()">▶</button>
+            <button class="m-ctrl" onclick="nextTrack()">⏭</button>
+          </div>
+        </div>
+        <div class="playlist" id="playlist"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alarm -->
+  <div class="moverlay" id="m-alarm" onclick="closeModalIfBg(event,'alarm')">
+    <div class="msheet">
+      <div class="mhandle"></div>
+      <div class="mhead">
+        <div class="mtitle">⏰ 智能闹钟</div>
+        <button class="mclose" onclick="closeModal('alarm')">✕</button>
+      </div>
+      <div class="mbody">
+        <div class="clock-face">
+          <div class="clock-big" id="clock-now">00:00</div>
+          <div class="clock-sub">当前时间</div>
+        </div>
+        <div class="alarm-inp-row">
+          <input class="alarm-inp" id="alarm-time" type="time" value="07:30">
+          <input class="alarm-inp" id="alarm-lbl" type="text" placeholder="备注">
+          <button class="alarm-add-btn" onclick="addAlarm()">添加</button>
+        </div>
+        <div class="alarm-list" id="alarm-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendar -->
+  <div class="moverlay" id="m-calendar" onclick="closeModalIfBg(event,'calendar')">
+    <div class="msheet">
+      <div class="mhandle"></div>
+      <div class="mhead">
+        <div class="mtitle">📅 日历行程</div>
+        <button class="mclose" onclick="closeModal('calendar')">✕</button>
+      </div>
+      <div class="mbody">
+        <div class="cal-nav-row">
+          <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+          <div class="cal-month-lbl" id="cal-lbl"></div>
+          <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+        </div>
+        <div class="cal-wdays">
+          <div class="cal-wd">日</div>
+          <div class="cal-wd">一</div>
+          <div class="cal-wd">二</div>
+          <div class="cal-wd">三</div>
+          <div class="cal-wd">四</div>
+          <div class="cal-wd">五</div>
+          <div class="cal-wd">六</div>
+        </div>
+        <div class="cal-days" id="cal-days"></div>
+        <div class="task-add-row">
+          <input class="task-inp" id="task-inp" type="text" placeholder="添加今日任务…">
+          <button class="task-add-btn" onclick="addTask()">添加</button>
+        </div>
+        <div class="task-list" id="task-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="moverlay" id="m-notes" onclick="closeModalIfBg(event,'notes')">
+    <div class="msheet">
+      <div class="mhandle"></div>
+      <div class="mhead">
+        <div class="mtitle">📝 灵感笔记</div>
+        <button class="mclose" onclick="closeModal('notes')">✕</button>
+      </div>
+      <div class="mbody">
+        <textarea class="note-ta" id="note-ta" placeholder="今天和小橘一起……&#10;把那些一闪而过的念头记下来吧"></textarea>
+        <div class="note-footer">
+          <div class="note-wc" id="note-wc">0 字</div>
+          <button class="note-save" onclick="saveNote()">💾 保存 (+2🪙)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+  <script src="./v4.3.js"></script>
+</body>
+
+</html>
