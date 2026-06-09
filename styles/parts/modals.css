@@ -602,6 +602,7 @@
 
     .task-inp {
       flex: 1;
+      min-width: 0;
       padding: 10px 14px;
       border: 1.5px solid var(--cream3);
       border-radius: 50px;
@@ -613,7 +614,23 @@
       transition: border-color .2s;
     }
 
-    .task-inp:focus {
+    .task-time-inp {
+      width: 96px;
+      flex: 0 0 96px;
+      padding: 10px 10px;
+      border: 1.5px solid var(--cream3);
+      border-radius: 50px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      outline: none;
+      background: white;
+      color: var(--brown2);
+      transition: border-color .2s;
+    }
+
+    .task-inp:focus,
+    .task-time-inp:focus {
       border-color: var(--orange)
     }
 
@@ -626,6 +643,7 @@
       font-weight: 800;
       font-size: 13px;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .task-list {
@@ -678,7 +696,29 @@
       font-size: 13px;
       font-weight: 700;
       color: var(--brown);
-      flex: 1
+      flex: 1;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .task-body {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .task-time {
+      flex: 0 0 auto;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: var(--cream2);
+      color: var(--brown2);
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
     }
 
     .task-txt.done {

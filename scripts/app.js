@@ -581,11 +581,14 @@ function calNav(dir) {
 // 日历弹窗内添加
 function addTask() {
   const inp = document.getElementById('task-inp');
+  const timeInp = document.getElementById('task-time');
   const txt = inp.value.trim(); if (!txt) return;
+  const time = timeInp ? timeInp.value : '';
   const key = selectedDate || getLocalDateKey();
   if (!S.tasks[key]) S.tasks[key] = [];
-  S.tasks[key].push({ txt, done: false, id: Date.now() });
+  S.tasks[key].push({ txt, time, done: false, id: Date.now() });
   inp.value = '';
+  if (timeInp) timeInp.value = '';
   S.coins += 1; updateHUD(); save();
   renderTaskList(); renderCalendar(); renderHomeTasks();
   toast('✅ 任务已添加 +1🪙');
@@ -594,18 +597,34 @@ function addTask() {
 // 主页添加今日任务
 function addHomeTask() {
   const inp = document.getElementById('home-task-inp');
+  const timeInp = document.getElementById('home-task-time');
   const txt = inp.value.trim();
   if (!txt) return;
+  const time = timeInp ? timeInp.value : '';
   const key = getLocalDateKey();
   if (!S.tasks[key]) S.tasks[key] = [];
-  S.tasks[key].push({ txt, done: false, id: Date.now() });
+  S.tasks[key].push({ txt, time, done: false, id: Date.now() });
   inp.value = '';
+  if (timeInp) timeInp.value = '';
   S.coins += 1;
   updateHUD(); save();
   toast('✅ 任务已添加 +1🪙');
   renderHomeTasks();
   renderTaskList();
   renderCalendar();
+}
+
+function getOrderedTaskEntries(tasks) {
+  return tasks
+    .map((task, index) => ({ task, index }))
+    .sort((a, b) => {
+      const at = a.task.time || '';
+      const bt = b.task.time || '';
+      if (at && bt && at !== bt) return at.localeCompare(bt);
+      if (at && !bt) return -1;
+      if (!at && bt) return 1;
+      return a.index - b.index;
+    });
 }
 
 // 渲染日历里的任务
@@ -622,9 +641,20 @@ function createTaskItem(key, task, index) {
   chk.dataset.key = key;
   chk.dataset.index = String(index);
 
+  const body = document.createElement('div');
+  body.className = 'task-body';
+
+  if (task.time) {
+    const time = document.createElement('span');
+    time.className = 'task-time';
+    time.textContent = task.time;
+    body.appendChild(time);
+  }
+
   const txt = document.createElement('span');
   txt.className = 'task-txt' + (task.done ? ' done' : '');
   txt.textContent = task.txt;
+  body.appendChild(txt);
 
   const del = document.createElement('button');
   del.className = 'task-del-btn';
@@ -634,7 +664,7 @@ function createTaskItem(key, task, index) {
   del.dataset.key = key;
   del.dataset.index = String(index);
 
-  d.append(chk, txt, del);
+  d.append(chk, body, del);
   return d;
 }
 function renderTaskList() {
@@ -650,8 +680,8 @@ function renderTaskList() {
     list.appendChild(empty);
     return;
   }
-  tasks.forEach((t, i) => {
-    list.appendChild(createTaskItem(key, t, i));
+  getOrderedTaskEntries(tasks).forEach(({ task, index }) => {
+    list.appendChild(createTaskItem(key, task, index));
   });
 }
 
@@ -672,8 +702,8 @@ function renderHomeTasks() {
   }
 
   list.textContent = '';
-  tasks.forEach((t, i) => {
-    list.appendChild(createTaskItem(key, t, i));
+  getOrderedTaskEntries(tasks).forEach(({ task, index }) => {
+    list.appendChild(createTaskItem(key, task, index));
   });
 }
 
