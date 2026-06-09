@@ -1,0 +1,101 @@
+/* ══════════════════════════════════════════════
+   ROOT & RESET
+══════════════════════════════════════════════ */
+    :root {
+      --cream: #FBF5EC;
+      --cream2: #F5ECD8;
+      --cream3: #EDE0CC;
+      --brown: #3D2010;
+      --brown2: #7A4F32;
+      --brown3: #B08868;
+      --orange: #C8714A;
+      --orange2: #E09060;
+      --orange3: #F5B88A;
+      --sage: #7A9E7E;
+      --sage2: #A8C8AC;
+      --sage3: #D4ECD8;
+      --rose: #C4806A;
+      --rose2: #DFA898;
+      --rose3: #F5DDD4;
+      --gold: #C8943A;
+      --gold2: #E8B858;
+      --gold3: #FDE8A8;
+      --night: #1A1428;
+      --night2: #2C2040;
+      --night3: #3D2C5A;
+      --r: 18px;
+      --r2: 24px;
+      --r3: 32px;
+      --shadow: 0 4px 24px rgba(61, 32, 16, 0.10);
+      --shadow2: 0 8px 32px rgba(61, 32, 16, 0.15);
+      --cat-sz: 1;
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+      --motion-fast: 140ms;
+      --motion-med: 240ms;
+      --nav-h: 72px;
+      --bottom-safe: 0px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    html {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: #2A1C10;
+      font-size: 16px
+    }
+
+    body {
+      width: 100%;
+      max-width: 400px;
+      min-height: 100vh;
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* paper texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(61, 32, 16, 0.025) 23px, rgba(61, 32, 16, 0.025) 24px),
+        repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(61, 32, 16, 0.01) 23px, rgba(61, 32, 16, 0.01) 24px);
+    }
+
+    /* ══════════════════════════════════════════════
+   SCREENS
+══════════════════════════════════════════════ */
+    .screen {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: calc(var(--nav-h) + var(--bottom-safe));
+      overflow-y: auto;
+      overflow-x: hidden;
+      z-index: 1;
+    }
+
+    .screen.on {
+      display: block;
+      opacity: 1;
+      transform: none
+    }

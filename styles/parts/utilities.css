@@ -1,0 +1,67 @@
+/* ══════════════════════════════════════════════
+   MISC
+══════════════════════════════════════════════ */
+    input,
+    textarea,
+    button {
+      font-family: 'Nunito', sans-serif
+    }
+
+    button,
+    [role="button"] {
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    button:focus-visible,
+    [role="button"]:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid rgba(200, 113, 74, 0.62);
+      outline-offset: 3px;
+    }
+
+    .food-card:active,
+    .play-card:active,
+    .feat-card:active,
+    .shop-card:active,
+    .swatch-wrap:active,
+    .name-save:active,
+    .task-add-btn:active,
+    .alarm-add-btn:active,
+    .note-save:active,
+    .tbtn:active {
+      transform: scale(0.97);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .feat-card:hover,
+      .shop-card:hover,
+      .food-card:hover,
+      .play-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 28px rgba(61, 32, 16, 0.10);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .raindrop,
+      .sd {
+        display: none !important;
+      }
+
+      .anim-body,
+      #svg-tail,
+      #cat-main.starving {
+        animation: none !important;
+      }
+    }

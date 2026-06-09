@@ -1,0 +1,226 @@
+/* ══════════════════════════════════════════════
+   ONBOARDING — 捡猫故事
+══════════════════════════════════════════════ */
+    #ob {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: var(--night);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      transition: opacity var(--motion-med) var(--ease-out);
+      overflow: hidden;
+    }
+
+    #ob.fade {
+      opacity: 0;
+      pointer-events: none
+    }
+
+    /* Rain */
+    .rain-wrap {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none
+    }
+
+    .raindrop {
+      position: absolute;
+      top: -20px;
+      width: 1px;
+      background: linear-gradient(transparent, rgba(160, 200, 255, 0.35));
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh)
+      }
+    }
+
+    /* Door scene */
+    .door-scene {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .door {
+      width: 80px;
+      height: 120px;
+      background: #3D2C1C;
+      border-radius: 40px 40px 4px 4px;
+      position: relative;
+      border: 3px solid #5A4030;
+      box-shadow: 0 0 60px rgba(255, 200, 100, 0.15), inset 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .door-glow {
+      position: absolute;
+      inset: -20px;
+      border-radius: 60px 60px 8px 8px;
+      background: radial-gradient(ellipse at 50% 50%, rgba(255, 180, 80, 0.12), transparent 70%);
+      animation: glow-pulse 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow-pulse {
+      0% {
+        opacity: .6
+      }
+
+      100% {
+        opacity: 1
+      }
+    }
+
+    .door-knob {
+      width: 8px;
+      height: 8px;
+      background: #C8943A;
+      border-radius: 50%;
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%)
+    }
+
+    .door-window {
+      width: 30px;
+      height: 22px;
+      background: rgba(255, 190, 80, 0.2);
+      border-radius: 4px;
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255, 190, 80, 0.3)
+    }
+
+    /* Tiny cat at door */
+    .ob-cat {
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+    }
+
+    .ob-cat-img {
+      width: 80px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    @keyframes ob-appear {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px)
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0)
+      }
+    }
+
+    .ob-text-area {
+      width: 100%;
+      padding: 32px 32px 16px;
+      background: linear-gradient(transparent, rgba(20, 14, 30, 0.95) 20%, rgba(20, 14, 30, 0.98) 100%);
+      z-index: 2;
+    }
+
+    .ob-line {
+      font-size: 15px;
+      color: rgba(255, 245, 220, 0.9);
+      line-height: 1.9;
+      font-weight: 500;
+      letter-spacing: .5px;
+      margin-bottom: 4px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity var(--motion-med) var(--ease-out), transform var(--motion-med) var(--ease-out);
+    }
+
+    .ob-line.show {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .ob-line.dim {
+      color: rgba(255, 245, 220, 0.55)
+    }
+
+    /* Name step */
+    #ob-name-step {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 32px 36px;
+      z-index: 10;
+      background: rgba(20, 14, 30, 0.98);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #ob-name-step.show {
+      display: flex
+    }
+
+    .ob-name-label {
+      font-size: 13px;
+      color: rgba(255, 245, 220, 0.6);
+      font-weight: 700;
+      letter-spacing: 1px
+    }
+
+    .ob-name-inp {
+      width: 100%;
+      max-width: 280px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 245, 220, 0.2);
+      border-radius: 50px;
+      padding: 14px 24px;
+      text-align: center;
+      color: white;
+      font-family: 'ZCOOL KuaiLe', cursive;
+      font-size: 20px;
+      outline: none;
+      transition: border-color .3s;
+    }
+
+    .ob-name-inp:focus {
+      border-color: rgba(255, 190, 80, 0.5)
+    }
+
+    .ob-name-inp::placeholder {
+      color: rgba(255, 255, 255, 0.25)
+    }
+
+    .ob-start-btn {
+      background: linear-gradient(135deg, var(--orange), var(--gold));
+      border: none;
+      border-radius: 50px;
+      padding: 14px 40px;
+      color: white;
+      font-family: 'ZCOOL KuaiLe', cursive;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(200, 113, 74, 0.4);
+      transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) var(--ease-out), background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, color var(--motion-fast) ease, box-shadow var(--motion-fast) var(--ease-out);
+      letter-spacing: 1px;
+    }
+
+    .ob-start-btn:active {
+      transform: scale(0.97)
+    }

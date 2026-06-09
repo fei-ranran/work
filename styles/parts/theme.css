@@ -1,0 +1,300 @@
+/* ══════════════════════════════════════════════
+   NIGHT MODE
+══════════════════════════════════════════════ */
+    body.night {
+      background: #EDE0CC
+    }
+
+    body.night .screen {
+      background: linear-gradient(160deg, #1A1428 0%, #2C2040 100%)
+    }
+
+    body.night #s-home {
+      background:
+        linear-gradient(rgba(26, 20, 40, 0.70), rgba(26, 20, 40, 0.78)),
+        url('../../assets/images/background.webp') center top / cover no-repeat,
+        #1A1428;
+    }
+
+    body.night .time-word,
+    body.night .aff-level-badge,
+    body.night .cat-name-tag,
+    body.night .tools-label {
+      color: rgba(255, 240, 210, 0.9)
+    }
+
+    body.night .aff-strip,
+    body.night .tool-btn,
+    body.night .day-log {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.06)
+    }
+
+    body.night .time-word,
+    body.night .time-sub,
+    body.night .cat-name-tag,
+    body.night .ht-title,
+    body.night .ht-date {
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+    }
+
+    body.night .aff-strip {
+      background: rgba(20, 14, 30, 0.42);
+      border-color: rgba(255, 240, 210, 0.12);
+    }
+
+    body.night .hunger-bar-wrap {
+      background: rgba(20, 14, 30, 0.42) !important;
+      border-color: rgba(255, 240, 210, 0.12) !important;
+    }
+
+    body.night .hunger-bar-wrap > span:first-child {
+      color: rgba(255, 240, 210, 0.9) !important;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+    }
+
+    body.night .dl-text {
+      color: rgba(255, 240, 210, 0.7)
+    }
+
+    body.night .dl-title {
+      color: rgba(255, 240, 210, 0.9)
+    }
+
+    body.night .speech-bub {
+      background: rgba(255, 250, 240, 0.95)
+    }
+
+    body.night .aff-pct,
+    body.night .time-sub {
+      color: rgba(255, 240, 210, 0.5)
+    }
+
+    /* Night mode - Home Todo overrides */
+    body.night .home-todo {
+      background: rgba(20, 14, 30, 0.58);
+      border-color: rgba(255, 240, 210, 0.12);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.20);
+    }
+
+    body.night .ht-title {
+      color: rgba(255, 240, 210, 0.9);
+    }
+
+    body.night .ht-date {
+      color: rgba(255, 240, 210, 0.5);
+    }
+
+    body.night .task-inp {
+      background: rgba(0, 0, 0, 0.2);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body.night .task-item {
+      background: rgba(0, 0, 0, 0.15);
+      box-shadow: none;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    body.night .task-txt {
+      color: rgba(255, 240, 210, 0.8);
+    }
+
+    body.night .task-txt.done {
+      color: rgba(255, 240, 210, 0.4);
+    }
+
+    body.night #s-interact {
+      background:
+        linear-gradient(rgba(26, 20, 40, 0.70), rgba(26, 20, 40, 0.78)),
+        url('../../assets/images/background.webp') center top / cover no-repeat,
+        #1A1428;
+    }
+
+    body.night #s-feat,
+    body.night #s-shop,
+    body.night #s-cust {
+      background: linear-gradient(160deg, #1A1428 0%, #2C2040 100%);
+    }
+
+    body.night .isc-title,
+    body.night .feat-header,
+    body.night .shop-h1,
+    body.night .cust-h1,
+    body.night .cc-title,
+    body.night .fcn,
+    body.night .scn,
+    body.night .fc-name,
+    body.night .pc-name,
+    body.night .mtitle,
+    body.night .pl-t,
+    body.night .ai-time,
+    body.night .cal-month-lbl {
+      color: rgba(255, 240, 210, 0.9);
+    }
+
+    body.night .isc-aff,
+    body.night .feat-sub,
+    body.night .shop-sub,
+    body.night .shop-sec-title,
+    body.night .fcd,
+    body.night .scs,
+    body.night .fc-desc,
+    body.night .pc-need,
+    body.night .pet-hint,
+    body.night .pet-count-text,
+    body.night .sw-label,
+    body.night .pl-n,
+    body.night .pl-d,
+    body.night .ai-label,
+    body.night .cal-wd,
+    body.night .note-wc {
+      color: rgba(255, 240, 210, 0.62);
+    }
+
+    body.night .isc-title,
+    body.night .feat-header,
+    body.night .shop-h1,
+    body.night .cust-h1,
+    body.night .cc-title,
+    body.night .fcn,
+    body.night .scn,
+    body.night .fc-name,
+    body.night .pc-name {
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.38);
+    }
+
+    body.night .tab-row,
+    body.night .pet-stage,
+    body.night .food-card,
+    body.night .play-card,
+    body.night .feat-card,
+    body.night .shop-card,
+    body.night .cust-card,
+    body.night .msheet,
+    body.night .pl-item,
+    body.night .alarm-item {
+      background: rgba(20, 14, 30, 0.58);
+      border-color: rgba(255, 240, 210, 0.12);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.18);
+    }
+
+    body.night .tab-row {
+      background: rgba(20, 14, 30, 0.42);
+    }
+
+    body.night .itab,
+    body.night .sz-btn,
+    body.night .vc-btn,
+    body.night .sess {
+      color: rgba(255, 240, 210, 0.66);
+      border-color: rgba(255, 240, 210, 0.12);
+    }
+
+    body.night .itab.on,
+    body.night .sz-btn.on,
+    body.night .vc-btn.on,
+    body.night .sess.on {
+      background: rgba(255, 240, 210, 0.12);
+      color: rgba(255, 240, 210, 0.94);
+      border-color: rgba(255, 240, 210, 0.24);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
+    }
+
+    body.night .shop-sec-title::after {
+      background: rgba(255, 240, 210, 0.12);
+    }
+
+    body.night .shop-wallet,
+    body.night .pet-reward-badge,
+    body.night .fce,
+    body.night .scp {
+      background: rgba(246, 196, 92, 0.14) !important;
+      border-color: rgba(246, 196, 92, 0.20);
+      color: #F6D27B !important;
+    }
+
+    body.night .fc-price {
+      color: #F6D27B;
+    }
+
+    body.night .name-inp,
+    body.night .alarm-inp,
+    body.night .note-ta {
+      background: rgba(0, 0, 0, 0.22);
+      border-color: rgba(255, 240, 210, 0.14);
+      color: rgba(255, 250, 240, 0.92);
+    }
+
+    body.night .name-inp::placeholder,
+    body.night .alarm-inp::placeholder,
+    body.night .task-inp::placeholder,
+    body.night .note-ta::placeholder {
+      color: rgba(255, 240, 210, 0.36);
+    }
+
+    body.night .moverlay {
+      background: rgba(7, 5, 12, 0.62);
+    }
+
+    body.night .mhandle {
+      background: rgba(255, 240, 210, 0.20);
+    }
+
+    body.night .mclose,
+    body.night .cal-nav-btn {
+      background: rgba(255, 240, 210, 0.10);
+      color: rgba(255, 240, 210, 0.78);
+    }
+
+    body.night .pl-item.on {
+      background: rgba(196, 128, 106, 0.18);
+      border-color: rgba(196, 128, 106, 0.28);
+    }
+
+    body.night .cal-d {
+      color: rgba(255, 240, 210, 0.78);
+    }
+
+    body.night .cal-d:hover {
+      background: rgba(255, 240, 210, 0.10);
+    }
+
+    body.night .cal-d.other {
+      color: rgba(255, 240, 210, 0.28);
+    }
+
+    /* Stars */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 1s
+    }
+
+    body.night .stars {
+      opacity: 1
+    }
+
+    .sd {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--dur, 2s) ease-in-out infinite alternate
+    }
+
+    @keyframes twinkle {
+      0% {
+        opacity: .2
+      }
+
+      100% {
+        opacity: .9
+      }
+    }

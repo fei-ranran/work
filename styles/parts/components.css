@@ -1,0 +1,43 @@
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+    #toast {
+      position: fixed;
+      bottom: 88px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: rgba(61, 32, 16, 0.88);
+      backdrop-filter: blur(8px);
+      color: var(--cream);
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0;
+      transition: transform var(--motion-med) var(--ease-out), opacity var(--motion-med) var(--ease-out), background-color var(--motion-med) ease, border-color var(--motion-med) ease, color var(--motion-med) ease, box-shadow var(--motion-med) var(--ease-out);
+      z-index: 9999;
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: .3px;
+    }
+
+    #toast.on {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
+
+    /* ══════════════════════════════════════════════
+   SCROLLBAR
+══════════════════════════════════════════════ */
+    ::-webkit-scrollbar {
+      width: 3px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(61, 32, 16, 0.12);
+      border-radius: 2px
+    }
