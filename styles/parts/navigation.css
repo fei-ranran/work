@@ -31,6 +31,25 @@
       border-radius: var(--r);
       transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) var(--ease-out), background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, color var(--motion-fast) ease, box-shadow var(--motion-fast) var(--ease-out);
       flex: 1;
+      position: relative;
+    }
+
+    .nb::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: 20px;
+      width: 12px;
+      height: 11px;
+      opacity: 0;
+      transform: translateY(3px) scale(0.88);
+      background:
+        radial-gradient(circle at 50% 70%, var(--orange) 0 28%, transparent 30%),
+        radial-gradient(circle at 22% 34%, var(--orange) 0 16%, transparent 18%),
+        radial-gradient(circle at 50% 22%, var(--orange) 0 16%, transparent 18%),
+        radial-gradient(circle at 78% 34%, var(--orange) 0 16%, transparent 18%);
+      transition: opacity var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
+      pointer-events: none;
     }
 
     .nb:active {
@@ -42,18 +61,40 @@
       transform: scale(1.1)
     }
 
+    .nb.on {
+      background: rgba(200, 113, 74, 0.06);
+    }
+
+    .nb.on::after {
+      opacity: .42;
+      transform: translateY(0) scale(1);
+    }
+
+    .nb.on .nav-cat-icon {
+      transform: scale(1.08);
+    }
+
     .nb.on .nl {
       color: var(--orange)
     }
 
     .ni {
-      width: 24px;
-      height: 24px;
+      width: 34px;
+      height: 34px;
       color: #B08868;
       transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) var(--ease-out), background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, color var(--motion-fast) ease, box-shadow var(--motion-fast) var(--ease-out);
       display: flex;
       align-items: center;
       justify-content: center
+    }
+
+    .nav-cat-icon {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform var(--motion-fast) var(--ease-out);
+      pointer-events: none;
     }
 
     .nl {
@@ -64,28 +105,3 @@
       letter-spacing: .3px
     }
 
-    /* center nav button */
-    .nb-center {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, var(--orange), var(--gold2));
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      margin-top: -16px;
-      box-shadow: 0 6px 20px rgba(200, 113, 74, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) var(--ease-out), background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, color var(--motion-fast) ease, box-shadow var(--motion-fast) var(--ease-out);
-      flex-shrink: 0;
-    }
-
-    .nb-center:active {
-      transform: scale(0.95)
-    }
-
-    .nb-center.ctr-on {
-      background: linear-gradient(135deg, var(--brown), var(--brown2));
-      box-shadow: 0 6px 20px rgba(61, 32, 16, 0.3)
-    }

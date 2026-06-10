@@ -614,24 +614,115 @@
       transition: border-color .2s;
     }
 
-    .task-time-inp {
-      width: 96px;
-      flex: 0 0 96px;
-      padding: 10px 10px;
+    .task-time-field {
+      position: relative;
+      width: 86px;
+      height: 42px;
+      flex: 0 0 86px;
       border: 1.5px solid var(--cream3);
       border-radius: 50px;
+      background: white;
+      color: var(--brown3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform var(--motion-fast) var(--ease-out), border-color var(--motion-fast) ease, background-color var(--motion-fast) ease, box-shadow var(--motion-fast) var(--ease-out);
+    }
+
+    .task-time-field:active {
+      transform: scale(0.98);
+    }
+
+    .task-time-field.has-value {
+      color: var(--brown2);
+    }
+
+    .task-time-inp {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      padding: 0;
+      border: 0;
       font-family: 'Nunito', sans-serif;
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 800;
       outline: none;
-      background: white;
-      color: var(--brown2);
-      transition: border-color .2s;
+      background: transparent;
+      color: transparent;
+      opacity: 0.01;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .task-time-inp::-webkit-datetime-edit,
+    .task-time-inp::-webkit-date-and-time-value {
+      color: transparent;
+    }
+
+    .task-time-inp::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .task-time-text {
+      position: relative;
+      z-index: 1;
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 900;
+      pointer-events: none;
+    }
+
+    .task-time-clock {
+      position: relative;
+      z-index: 1;
+      width: 14px;
+      height: 14px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+
+    .task-time-clock::before,
+    .task-time-clock::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 2px;
+      border-radius: 2px;
+      background: currentColor;
+      transform-origin: 50% 0;
+    }
+
+    .task-time-clock::before {
+      height: 5px;
+      transform: translate(-50%, -1px) rotate(180deg);
+    }
+
+    .task-time-clock::after {
+      height: 4px;
+      transform: translate(-50%, -1px) rotate(120deg);
     }
 
     .task-inp:focus,
-    .task-time-inp:focus {
-      border-color: var(--orange)
+    .task-time-field:focus-within {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 2px rgba(200, 113, 74, 0.12);
     }
 
     .task-add-btn {

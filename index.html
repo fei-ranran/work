@@ -7,7 +7,7 @@
   <title>拾猫记 · 有猫在就不一样</title>
   <link rel="preload" href="./assets/fonts/ZCOOL-KuaiLe-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="./assets/fonts/Nunito-700.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="./assets/images/background.webp" as="image" type="image/webp">
+  <link rel="preload" href="./assets/images/living-room.webp" as="image" type="image/webp">
   <link rel="preload" href="./assets/images/orange1.webp" as="image" type="image/webp">
   <link rel="stylesheet" href="./styles/main.css">
 </head>
@@ -59,7 +59,7 @@
         <div class="time-sub" id="time-sub">今天也要好好过 ·͜·</div>
       </div>
       <div class="coin-chip">
-        <span class="coin-icon">★</span>
+        <span class="coin-icon" aria-hidden="true">🪙</span>
         <span class="coin-val" id="coin-display">50</span>
       </div>
     </div>
@@ -100,21 +100,29 @@
       </div>
       <div class="task-add-row home-task-add">
         <input class="task-inp" id="home-task-inp" type="text" placeholder="添加今日任务">
-        <input class="task-time-inp" id="home-task-time" type="time" aria-label="待办时间">
+        <label class="task-time-field" for="home-task-time">
+          <input class="task-time-inp" id="home-task-time" type="time" aria-label="待办时间">
+          <span class="task-time-text" data-time-label-for="home-task-time">时间</span>
+          <span class="task-time-clock" aria-hidden="true"></span>
+        </label>
         <button class="task-add-btn" type="button" data-action="add-home-task">添加</button>
       </div>
       <div class="task-list" id="home-task-list">
         <!-- 主页任务列表 -->
       </div>
-      <!-- 移动到此：主页最近闹钟列表 -->
+      <!-- 首页轻量提醒入口 -->
       <div id="home-alarm-wrap" class="home-alarm-wrap">
         <div class="home-alarm-head">
           <span class="home-alarm-icon">⏰</span>
           <span class="home-alarm-title">闹钟</span>
         </div>
-        <div id="home-alarm-list" class="home-alarm-list">
-          <!-- 闹钟列表将渲染在此 -->
-        </div>
+        <button class="home-alarm-card" id="home-alarm-card" type="button" data-action="open-modal" data-modal="alarm">
+          <span class="home-alarm-info">
+            <span class="home-alarm-primary" id="home-alarm-primary">今日还没有闹钟</span>
+            <span class="home-alarm-sub" id="home-alarm-sub">让猫咪提醒你重要时刻</span>
+          </span>
+          <span class="home-alarm-action" id="home-alarm-action">设置</span>
+        </button>
       </div>
     </div>
 
@@ -154,15 +162,19 @@
 
     <!-- FEED -->
     <div class="ipanel" id="ip-feed">
+      <div class="interaction-cat-stage">
+        <img id="cat-feed-img" class="interaction-cat-img" src="./assets/images/orange1.webp" alt="等待喂食的小猫">
+        <div class="interaction-cat-copy">从库存里挑一份食物，喂完会消耗 1 份</div>
+      </div>
       <div class="food-grid">
         <div class="food-card" role="button" tabindex="0" data-action="feed" data-item="fish">
           <div class="fc-icon">🐟</div>
           <div class="fc-name">小鱼干</div>
-          <div class="fc-desc">猫咪最爱的零食，随时可以给</div>
+          <div class="fc-desc">猫咪最爱的随身零食</div>
           <div class="fc-bottom">
-            <span class="fc-price">免费</span>
+            <span class="fc-use">消耗 1 份</span>
             <span class="fc-aff">+5 ♥</span>
-            <span id="fst-fish" class="fc-stock">库存:3</span>
+            <span id="fst-fish" class="fc-stock">库存 3</span>
           </div>
         </div>
         <div class="food-card" role="button" tabindex="0" data-action="feed" data-item="milk">
@@ -170,9 +182,9 @@
           <div class="fc-name">猫用牛奶</div>
           <div class="fc-desc">无乳糖配方，对猫咪友好</div>
           <div class="fc-bottom">
-            <span class="fc-price">免费</span>
+            <span class="fc-use">消耗 1 份</span>
             <span class="fc-aff">+3 ♥</span>
-            <span id="fst-milk" class="fc-stock">库存:2</span>
+            <span id="fst-milk" class="fc-stock">库存 2</span>
           </div>
         </div>
         <div class="food-card" role="button" tabindex="0" data-action="feed" data-item="treat">
@@ -180,9 +192,9 @@
           <div class="fc-name">猫咪零食</div>
           <div class="fc-desc">特殊配方，猫咪超级喜欢</div>
           <div class="fc-bottom">
-            <span class="fc-price">5🪙</span>
+            <span class="fc-use">消耗 1 份</span>
             <span class="fc-aff">+4 ♥</span>
-            <span id="fst-treat" class="fc-empty">库存:0</span>
+            <span id="fst-treat" class="fc-stock">库存 0</span>
           </div>
         </div>
         <div class="food-card" role="button" tabindex="0" data-action="feed" data-item="cake">
@@ -190,9 +202,9 @@
           <div class="fc-name">生日蛋糕</div>
           <div class="fc-desc">特别的日子用，满满爱意</div>
           <div class="fc-bottom">
-            <span class="fc-price">20🪙</span>
+            <span class="fc-use">消耗 1 份</span>
             <span class="fc-aff">+10 ♥</span>
-            <span id="fst-cake" class="fc-empty">库存:0</span>
+            <span id="fst-cake" class="fc-stock">库存 0</span>
           </div>
         </div>
       </div>
@@ -200,27 +212,31 @@
 
     <!-- PLAY -->
     <div class="ipanel" id="ip-play">
+      <div class="interaction-cat-stage">
+        <img id="cat-play-img" class="interaction-cat-img" src="./assets/images/orange1.webp" alt="准备玩耍的小猫">
+        <div class="interaction-cat-copy">选择一个玩具，猫咪会跟着你一起玩</div>
+      </div>
       <div class="play-grid">
         <div class="play-card" role="button" tabindex="0" data-action="play" data-item="ball">
           <div class="pc-icon">🎾</div>
           <div class="pc-name">扔球玩耍</div>
           <div class="pc-need">消耗 1 网球</div>
           <div class="pc-aff">好感 +4 ♥</div>
-          <div id="pst-ball" class="pc-stock">库存:1</div>
+          <div id="pst-ball" class="pc-stock">库存 1</div>
         </div>
         <div class="play-card" role="button" tabindex="0" data-action="play" data-item="yarn">
           <div class="pc-icon">🧶</div>
           <div class="pc-name">追毛线球</div>
           <div class="pc-need">消耗 1 毛线球</div>
           <div class="pc-aff">好感 +3 ♥</div>
-          <div id="pst-yarn" class="pc-stock">库存:0</div>
+          <div id="pst-yarn" class="pc-stock">库存 0</div>
         </div>
         <div class="play-card" role="button" tabindex="0" data-action="play" data-item="laser">
-          <div class="pc-icon">🔴</div>
+          <div class="pc-icon laser-glyph" aria-hidden="true"></div>
           <div class="pc-name">激光笔逗猫</div>
           <div class="pc-need">消耗 1 激光笔</div>
           <div class="pc-aff">好感 +6 ♥</div>
-          <div id="pst-laser" class="pc-stock">库存:0</div>
+          <div id="pst-laser" class="pc-stock">库存 0</div>
         </div>
         <div class="play-card" role="button" tabindex="0" data-action="play" data-item="free">
           <div class="pc-icon">✋</div>
@@ -244,31 +260,31 @@
         <div class="fci">📖</div>
         <div class="fcn">专注阅读</div>
         <div class="fcd">设定读书时间，<br>完成后解锁专属互动</div>
-        <div class="fce">🪙 每25分钟 +10</div>
-      </div>
-      <div class="feat-card tone-music" role="button" tabindex="0" data-action="open-modal" data-modal="music">
-        <div class="fci">🎵</div>
-        <div class="fcn">轻音乐</div>
-        <div class="fcd">舒缓的旋律，<br>让猫咪也放松下来</div>
-        <div class="fce">🪙 每30分钟 +5</div>
-      </div>
-      <div class="feat-card tone-alarm" role="button" tabindex="0" data-action="open-modal" data-modal="alarm">
-        <div class="fci">⏰</div>
-        <div class="fcn">智能闹钟</div>
-        <div class="fcd">让猫咪在清晨<br>温柔地叫醒你</div>
-        <div class="fce">🪙 按时起床 +5</div>
+        <div class="fce"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 每25分钟 +10</div>
       </div>
       <div class="feat-card tone-calendar" role="button" tabindex="0" data-action="open-modal" data-modal="calendar">
         <div class="fci">📅</div>
         <div class="fcn">日历行程</div>
         <div class="fcd">记录每日计划，<br>不错过生活的细节</div>
-        <div class="fce">🪙 完成任务 +2</div>
+        <div class="fce"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 完成任务 +2</div>
+      </div>
+      <div class="feat-card tone-music" role="button" tabindex="0" data-action="open-modal" data-modal="music">
+        <div class="fci">🎵</div>
+        <div class="fcn">轻音乐</div>
+        <div class="fcd">舒缓的旋律，<br>让猫咪也放松下来</div>
+        <div class="fce"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 每30分钟 +5</div>
+      </div>
+      <div class="feat-card tone-alarm" role="button" tabindex="0" data-action="open-modal" data-modal="alarm">
+        <div class="fci">⏰</div>
+        <div class="fcn">闹钟</div>
+        <div class="fcd">让猫咪在清晨<br>温柔地叫醒你</div>
+        <div class="fce"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 按时起床 +5</div>
       </div>
       <div class="feat-card tone-notes" role="button" tabindex="0" data-action="open-modal" data-modal="notes">
         <div class="fci">📝</div>
         <div class="fcn">灵感笔记</div>
         <div class="fcd">把那些一闪而过的<br>念头记下来</div>
-        <div class="fce">🪙 每次保存 +2</div>
+        <div class="fce"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 每次保存 +2</div>
       </div>
       <div class="feat-card tone-sleep" role="button" tabindex="0" data-action="toast" data-message="🌙 睡眠助手即将到来～">
         <div class="fci">🌙</div>
@@ -285,7 +301,7 @@
   <div class="screen" id="s-shop">
     <div class="shop-header">
       <div class="shop-h1">喵喵商店</div>
-      <div class="shop-wallet">🪙 <span id="shop-coins">50</span></div>
+      <div class="shop-wallet"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> <span id="shop-coins">50</span></div>
     </div>
     <div class="shop-sub">用日常积累的代币，换取与猫咪的美好时光</div>
 
@@ -295,25 +311,25 @@
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="fish" data-cost="5" data-qty="3" data-inv="fish">
           <div class="sci">🐟</div>
           <div class="scn">小鱼干 ×3</div>
-          <div class="scp">🪙 5</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 5</div>
           <div class="scs">已有:<span id="si-fish">3</span></div>
         </div>
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="milk" data-cost="8" data-qty="2" data-inv="milk">
           <div class="sci">🥛</div>
           <div class="scn">猫用牛奶 ×2</div>
-          <div class="scp">🪙 8</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 8</div>
           <div class="scs">已有:<span id="si-milk">2</span></div>
         </div>
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="treat" data-cost="12" data-qty="2" data-inv="treat">
           <div class="sci">🍬</div>
           <div class="scn">猫咪零食 ×2</div>
-          <div class="scp">🪙 12</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 12</div>
           <div class="scs">已有:<span id="si-treat">0</span></div>
         </div>
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="cake" data-cost="20" data-qty="1" data-inv="cake">
           <div class="sci">🎂</div>
           <div class="scn">生日蛋糕</div>
-          <div class="scp">🪙 20</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 20</div>
           <div class="scs">已有:<span id="si-cake">0</span></div>
         </div>
       </div>
@@ -325,19 +341,19 @@
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="ball" data-cost="10" data-qty="2" data-inv="ball">
           <div class="sci">🎾</div>
           <div class="scn">网球 ×2</div>
-          <div class="scp">🪙 10</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 10</div>
           <div class="scs">已有:<span id="si-ball">1</span></div>
         </div>
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="yarn" data-cost="8" data-qty="2" data-inv="yarn">
           <div class="sci">🧶</div>
           <div class="scn">毛线球 ×2</div>
-          <div class="scp">🪙 8</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 8</div>
           <div class="scs">已有:<span id="si-yarn">0</span></div>
         </div>
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="laser" data-cost="15" data-qty="1" data-inv="laser">
-          <div class="sci">🔴</div>
+          <div class="sci laser-glyph" aria-hidden="true"></div>
           <div class="scn">激光笔</div>
-          <div class="scp">🪙 15</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 15</div>
           <div class="scs">已有:<span id="si-laser">0</span></div>
         </div>
       </div>
@@ -349,19 +365,19 @@
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="bow" data-cost="30" data-qty="1" data-inv="bow">
           <div class="sci">🎀</div>
           <div class="scn">蝴蝶结</div>
-          <div class="scp">🪙 30</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 30</div>
           <div class="scs">已有:<span id="si-bow">0</span></div>
         </div>
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="crown" data-cost="50" data-qty="1" data-inv="crown">
           <div class="sci">👑</div>
           <div class="scn">猫咪皇冠</div>
-          <div class="scp">🪙 50</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 50</div>
           <div class="scs">已有:<span id="si-crown">0</span></div>
         </div>
         <div class="shop-card" role="button" tabindex="0" data-action="buy" data-item="bed" data-cost="40" data-qty="1" data-inv="bed">
           <div class="sci">🛏</div>
           <div class="scn">豪华猫窝</div>
-          <div class="scp">🪙 40</div>
+          <div class="scp"><span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 40</div>
           <div class="scs">已有:<span id="si-bed">0</span></div>
         </div>
       </div>
@@ -444,41 +460,31 @@
   <nav id="nav">
     <button class="nb on" id="nb-home" type="button" data-action="switch-screen" data-screen="home">
       <div class="ni">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-        </svg>
+        <img class="nav-cat-icon" src="./assets/images/shouye-nav.png" alt="" aria-hidden="true">
       </div>
       <div class="nl">首页</div>
     </button>
     <button class="nb" id="nb-interact" type="button" data-action="switch-screen" data-screen="interact">
       <div class="ni">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
-          <path
-            d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-        </svg>
+        <img class="nav-cat-icon" src="./assets/images/hudong-nav.png" alt="" aria-hidden="true">
       </div>
       <div class="nl">互动</div>
     </button>
-    <button class="nb-center" id="nb-center" type="button" data-action="switch-screen" data-screen="feat">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="26" height="26">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="16" />
-        <line x1="8" y1="12" x2="16" y2="12" />
-      </svg>
+    <button class="nb" id="nb-center" type="button" data-action="switch-screen" data-screen="feat">
+      <div class="ni">
+        <img class="nav-cat-icon" src="./assets/images/gongneng-nav.png" alt="" aria-hidden="true">
+      </div>
+      <div class="nl">功能</div>
     </button>
     <button class="nb" id="nb-shop" type="button" data-action="switch-screen" data-screen="shop">
       <div class="ni">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
-        </svg>
+        <img class="nav-cat-icon" src="./assets/images/shangdian-nav.png" alt="" aria-hidden="true">
       </div>
       <div class="nl">商店</div>
     </button>
     <button class="nb" id="nb-cust" type="button" data-action="switch-screen" data-screen="cust">
       <div class="ni">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
-          <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-        </svg>
+        <img class="nav-cat-icon" src="./assets/images/zidingyi-nav.png" alt="" aria-hidden="true">
       </div>
       <div class="nl">自定义</div>
     </button>
@@ -507,7 +513,7 @@
           <div class="timer-num" id="timer-display">25:00</div>
           <div class="timer-lbl">专注计时中 · 猫咪也在陪你</div>
         </div>
-        <div class="timer-note" id="timer-note">完成后获得 🪙 10 代币</div>
+        <div class="timer-note" id="timer-note">完成后获得 <span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> 10 代币</div>
         <div class="timer-btns">
           <button class="tbtn tbtn-reset" type="button" data-action="reset-timer">重置</button>
           <button class="tbtn tbtn-start" id="timer-btn" type="button" data-action="toggle-timer">开始</button>
@@ -551,7 +557,7 @@
     <div class="msheet">
       <div class="mhandle"></div>
       <div class="mhead">
-        <div class="mtitle">⏰ 智能闹钟</div>
+        <div class="mtitle">⏰ 闹钟</div>
         <button class="mclose" type="button" data-action="close-modal" data-modal="alarm">✕</button>
       </div>
       <div class="mbody">
@@ -595,7 +601,11 @@
         <div class="cal-days" id="cal-days"></div>
         <div class="task-add-row">
           <input class="task-inp" id="task-inp" type="text" placeholder="添加今日任务">
-          <input class="task-time-inp" id="task-time" type="time" aria-label="待办时间">
+          <label class="task-time-field" for="task-time">
+            <input class="task-time-inp" id="task-time" type="time" aria-label="待办时间">
+            <span class="task-time-text" data-time-label-for="task-time">时间</span>
+            <span class="task-time-clock" aria-hidden="true"></span>
+          </label>
           <button class="task-add-btn" type="button" data-action="add-task">添加</button>
         </div>
         <div class="task-list" id="task-list"></div>
@@ -615,7 +625,7 @@
         <textarea class="note-ta" id="note-ta" placeholder="今天和小橘一起……&#10;把那些一闪而过的念头记下来吧"></textarea>
         <div class="note-footer">
           <div class="note-wc" id="note-wc">0 字</div>
-          <button class="note-save" type="button" data-action="save-note">💾 保存 (+2🪙)</button>
+          <button class="note-save" type="button" data-action="save-note">💾 保存 (+2<span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span>)</button>
         </div>
       </div>
     </div>

@@ -88,6 +88,7 @@ function initApp() {
   const now = new Date();
   S.calY = now.getFullYear(); S.calM = now.getMonth();
   renderCalendar(); renderTaskList();
+  initTaskTimeInputs();
 
   // 主页待办同步初始化
   document.getElementById('ht-date').textContent = `${now.getMonth() + 1}月${now.getDate()}日`;
@@ -184,7 +185,7 @@ function checkLogin() {
     S.streak = S.lastDate && (new Date() - new Date(S.lastDate)) < 172800000 ? (S.streak + 1) : 1;
     S.lastDate = today;
     save(); updateHUD();
-    setTimeout(() => toast(`🌅 每日签到 +${bonus}🪙（连续${S.streak}天）`), 2000);
+    setTimeout(() => toast(`🌅 每日签到 +${bonus} 代币（连续${S.streak}天）`), 2000);
   }
 }
 
@@ -246,19 +247,23 @@ function petCat() {
 }
 
 function feed(type) {
-  const cfg = { fish: { cost: 0, aff: 5, name: '小鱼干' }, milk: { cost: 0, aff: 3, name: '猫用牛奶' }, treat: { cost: 5, aff: 4, name: '猫咪零食' }, cake: { cost: 20, aff: 10, name: '生日蛋糕' } };
+  const cfg = {
+    fish: { aff: 5, name: '小鱼干', icon: '🐟' },
+    milk: { aff: 3, name: '猫用牛奶', icon: '🥛' },
+    treat: { aff: 4, name: '猫咪零食', icon: '🍬' },
+    cake: { aff: 10, name: '生日蛋糕', icon: '🎂' }
+  };
   const c = cfg[type];
-  if (S.items[type] <= 0) { toast('❌ 库存不足，快去商店购买吧'); return; }
-  if (c.cost > 0 && S.coins < c.cost) { toast(`❌ 代币不足，需要 ${c.cost}🪙`); return; }
-  S.items[type]--;
-  if (c.cost > 0) S.coins -= c.cost;
+  if (!c) return;
+  if ((S.items[type] || 0) <= 0) { toast('❌ 库存不足，快去商店购买吧'); return; }
+  S.items[type] = (S.items[type] || 0) - 1;
   // 喂食增加饥饿度
   S.hunger = Math.min(100, S.hunger + 25);
   updateHunger();
 
   addAff(c.aff);
   updateHUD(); save();
-  toast(`${type === 'fish' ? '🐟' : type === 'milk' ? '🥛' : type === 'treat' ? '🍬' : '🎂'} 喂食成功！能量已补充`);
+  toast(`${c.icon} ${c.name}已喂给${S.name || '猫咪'} · 库存 -1`);
   updateBubble();
 }
 
@@ -292,7 +297,7 @@ function spawnParticles(id, chars) {
 
 // ── SHOP ──
 function buy(key, cost, qty, invKey) {
-  if (S.coins < cost) { toast(`❌ 代币不足，需要 ${cost}🪙`); return; }
+  if (S.coins < cost) { toast(`❌ 代币不足，需要 ${cost} 代币`); return; }
   S.coins -= cost;
   S.items[invKey] = (S.items[invKey] || 0) + qty;
   updateHUD(); save();
@@ -306,8 +311,14 @@ function renderInventory() {
     const play = document.getElementById('pst-' + k);
     const shop = document.getElementById('si-' + k);
     const v = S.items[k] || 0;
-    if (feed) feed.textContent = '库存:' + v;
-    if (play) play.textContent = '库存:' + v;
+    if (feed) {
+      feed.textContent = '库存 ' + v;
+      feed.classList.toggle('is-empty', v <= 0);
+    }
+    if (play) {
+      play.textContent = '库存 ' + v;
+      play.classList.toggle('is-empty', v <= 0);
+    }
     if (shop) shop.textContent = v;
   });
 }
@@ -329,7 +340,7 @@ function setSess(mins, btn) {
   document.querySelectorAll('.sess').forEach(b => b.classList.remove('on'));
   if (btn) btn.classList.add('on');
   const r = getSessionReward(mins);
-  document.getElementById('timer-note').textContent = `完成后获得 🪙 ${r} 代币`;
+  document.getElementById('timer-note').innerHTML = `完成后获得 <span class="coin-icon coin-icon-sm" aria-hidden="true">🪙</span> ${r} 代币`;
   document.getElementById('timer-btn').textContent = '开始';
   renderTimer();
 }
@@ -353,7 +364,7 @@ function toggleTimer() {
         S.timerLeft = S.sessMins * 60;
         const rwd = getSessionReward(S.sessMins);
         S.coins += rwd; addAff(3); updateHUD(); save();
-        toast(`🎉 阅读完成！+${rwd}🪙 · 好感+3`);
+        toast(`🎉 阅读完成！+${rwd} 代币 · 好感+3`);
         document.getElementById('timer-btn').textContent = '开始';
         renderTimer();
       }
@@ -441,19 +452,34 @@ function tickClock() {
   if (el) el.textContent = `${h}:${m}`;
   S.alarms.forEach(a => {
     if (a.on && a.time === `${h}:${m}` && s === '00') {
-      toast(`⏰ ${a.lbl || '该起床了'}！— 来自${S.name}的叫醒`);
+      toast(`⏰ ${a.lbl || '提醒时间到了'}！— 来自${S.name}的提醒`);
       S.coins += 5; updateHUD(); save();
     }
   });
 }
 
 // ── ALARM ──
+function getCurrentTimeValue() {
+  const now = new Date();
+  return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+}
+
+function resetAlarmInputs() {
+  const time = document.getElementById('alarm-time');
+  const label = document.getElementById('alarm-lbl');
+  if (time) time.value = getCurrentTimeValue();
+  if (label) label.value = '';
+}
+
 function addAlarm() {
-  const t = document.getElementById('alarm-time').value;
-  const l = document.getElementById('alarm-lbl').value || '起床啦';
+  const timeInput = document.getElementById('alarm-time');
+  const labelInput = document.getElementById('alarm-lbl');
+  const t = timeInput ? timeInput.value : '';
+  const l = labelInput && labelInput.value ? labelInput.value : '提醒';
   if (!t) return;
   S.alarms.push({ time: t, lbl: l, on: true, id: Date.now() });
   save(); renderAlarms(); renderHomeAlarms();
+  resetAlarmInputs();
   toast('✅ 闹钟已添加');
 }
 function renderAlarms() {
@@ -507,29 +533,36 @@ function delAlarm(i) {
 
 function renderHomeAlarms() {
   const wrap = document.getElementById('home-alarm-wrap');
-  const listCont = document.getElementById('home-alarm-list');
-  if (!wrap || !listCont) return;
+  const card = document.getElementById('home-alarm-card');
+  const primary = document.getElementById('home-alarm-primary');
+  const sub = document.getElementById('home-alarm-sub');
+  const action = document.getElementById('home-alarm-action');
+  if (!wrap || !card || !primary || !sub || !action) return;
 
-  const activeAlarms = S.alarms.filter(a => a.on).sort((a, b) => a.time.localeCompare(b.time));
+  wrap.style.display = 'flex';
+  const alarms = Array.isArray(S.alarms) ? S.alarms : [];
+  const activeAlarms = alarms.filter(a => a.on && a.time).sort((a, b) => a.time.localeCompare(b.time));
 
-  if (activeAlarms.length > 0) {
-    wrap.style.display = 'flex';
-    listCont.textContent = '';
-    activeAlarms.forEach(a => {
-      const row = document.createElement('div');
-      row.className = 'home-alarm-item';
-      const label = document.createElement('span');
-      label.className = 'home-alarm-label';
-      label.textContent = a.lbl || '提醒';
-      const time = document.createElement('span');
-      time.className = 'home-alarm-time';
-      time.textContent = a.time;
-      row.append(label, time);
-      listCont.appendChild(row);
-    });
-  } else {
-    wrap.style.display = 'none';
+  if (!activeAlarms.length) {
+    primary.textContent = alarms.length ? '还没有开启的闹钟' : '今日还没有闹钟';
+    sub.textContent = alarms.length ? '打开闹钟后会显示在首页' : '让猫咪提醒你重要时刻';
+    action.textContent = alarms.length ? '编辑' : '设置';
+    card.setAttribute('aria-label', `${action.textContent}闹钟`);
+    return;
   }
+
+  const now = new Date();
+  const nowTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const nextAlarm = activeAlarms.find(a => a.time >= nowTime) || activeAlarms[0];
+  const dayText = nextAlarm.time >= nowTime ? '今天' : '明天';
+  const label = nextAlarm.lbl || '提醒';
+
+  primary.textContent = nextAlarm.time;
+  sub.textContent = activeAlarms.length > 1
+    ? `${dayText} ${label} · 还有 ${activeAlarms.length - 1} 个提醒`
+    : `${dayText} ${label}`;
+  action.textContent = '编辑';
+  card.setAttribute('aria-label', `编辑闹钟，下一次提醒 ${nextAlarm.time} ${label}`);
 }
 
 // ── CALENDAR & TASKS ──
@@ -588,10 +621,13 @@ function addTask() {
   if (!S.tasks[key]) S.tasks[key] = [];
   S.tasks[key].push({ txt, time, done: false, id: Date.now() });
   inp.value = '';
-  if (timeInp) timeInp.value = '';
+  if (timeInp) {
+    timeInp.value = '';
+    syncTaskTimeLabel(timeInp);
+  }
   S.coins += 1; updateHUD(); save();
   renderTaskList(); renderCalendar(); renderHomeTasks();
-  toast('✅ 任务已添加 +1🪙');
+  toast('✅ 任务已添加 +1 代币');
 }
 
 // 主页添加今日任务
@@ -605,13 +641,33 @@ function addHomeTask() {
   if (!S.tasks[key]) S.tasks[key] = [];
   S.tasks[key].push({ txt, time, done: false, id: Date.now() });
   inp.value = '';
-  if (timeInp) timeInp.value = '';
+  if (timeInp) {
+    timeInp.value = '';
+    syncTaskTimeLabel(timeInp);
+  }
   S.coins += 1;
   updateHUD(); save();
-  toast('✅ 任务已添加 +1🪙');
+  toast('✅ 任务已添加 +1 代币');
   renderHomeTasks();
   renderTaskList();
   renderCalendar();
+}
+
+function syncTaskTimeLabel(input) {
+  if (!input || !input.id) return;
+  const label = document.querySelector(`[data-time-label-for="${input.id}"]`);
+  if (!label) return;
+  const field = label.closest('.task-time-field');
+  label.textContent = input.value || '时间';
+  if (field) field.classList.toggle('has-value', Boolean(input.value));
+}
+
+function initTaskTimeInputs() {
+  document.querySelectorAll('.task-time-inp').forEach(input => {
+    syncTaskTimeLabel(input);
+    input.addEventListener('input', () => syncTaskTimeLabel(input));
+    input.addEventListener('change', () => syncTaskTimeLabel(input));
+  });
 }
 
 function getOrderedTaskEntries(tasks) {
@@ -714,7 +770,7 @@ function toggleTask(key, i, trigger) {
   if (S.tasks[key][i].done) {
     S.coins += 2;
     updateHUD();
-    toast('✅ 任务完成 +2🪙');
+    toast('✅ 任务完成 +2 代币');
     // 触发完成特效
     const rect = trigger ? trigger.getBoundingClientRect() : null;
     spawnCompletionEffect(rect);
@@ -737,7 +793,7 @@ function toggleTask(key, i, trigger) {
 function spawnCompletionEffect(rect) {
   const x = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
   const y = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
-  const chars = '✨💖🌟🐾🪙';
+  const chars = '✨💖🌟🐾😺';
   for (let i = 0; i < 10; i++) {
     const el = document.createElement('div');
     el.className = 'particle';
@@ -771,7 +827,7 @@ function delTask(key, i) {
 function saveNote() {
   S.notes = document.getElementById('note-ta').value;
   S.coins += 2; updateHUD(); save();
-  toast('💾 已保存 +2🪙');
+  toast('💾 已保存 +2 代币');
 }
 
 // ── DAY LOG ──
@@ -795,6 +851,10 @@ function applyBreed() {
   if (mainCat) mainCat.src = `./assets/images/${b}1.webp`;
   const petCat = document.getElementById('cat-pet-img');
   if (petCat) petCat.src = `./assets/images/${b}1.webp`;
+  const feedCat = document.getElementById('cat-feed-img');
+  if (feedCat) feedCat.src = `./assets/images/${b}1.webp`;
+  const playCat = document.getElementById('cat-play-img');
+  if (playCat) playCat.src = `./assets/images/${b}1.webp`;
   const previewCat = document.getElementById('cat-preview');
   if (previewCat) previewCat.src = `./assets/images/${b}1.webp`;
   const obCat = document.querySelector('#ob-cat img');
@@ -822,6 +882,18 @@ function applySize() {
   if (pet) {
     pet.style.transform = `scale(${sc})`;
     pet.style.transformOrigin = 'center bottom';
+  }
+
+  const feed = document.getElementById('cat-feed-img');
+  if (feed) {
+    feed.style.transform = `scale(${sc})`;
+    feed.style.transformOrigin = 'center bottom';
+  }
+
+  const play = document.getElementById('cat-play-img');
+  if (play) {
+    play.style.transform = `scale(${sc})`;
+    play.style.transformOrigin = 'center bottom';
   }
 
   const prev = document.getElementById('cat-preview');
@@ -880,11 +952,7 @@ function switchScreen(id, btn) {
 
   // reset all nav buttons
   document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
-  document.getElementById('nb-center').classList.remove('ctr-on');
-  // highlight the right one
-  if (id === 'feat') {
-    document.getElementById('nb-center').classList.add('ctr-on');
-  } else if (btn) {
+  if (btn) {
     btn.classList.add('on');
   }
   updateHUD();
@@ -962,7 +1030,10 @@ function updateHunger() {
 function openModal(name) {
   document.querySelectorAll('.moverlay').forEach(m => m.classList.remove('on'));
   document.getElementById('m-' + name).classList.add('on');
-  if (name === 'alarm') tickClock();
+  if (name === 'alarm') {
+    tickClock();
+    resetAlarmInputs();
+  }
   if (name === 'calendar') { renderCalendar(); renderTaskList(); }
   if (name === 'notes') { document.getElementById('note-ta').value = S.notes || ''; }
   if (name === 'music') { renderPlaylist(); selectTrack(S.mTrack, false); }
