@@ -246,6 +246,111 @@ function petCat() {
   saveSoon();
 }
 
+function getCatScale() {
+  const scales = { small: .72, medium: .85, large: 1 };
+  return scales[S.size || 'medium'] || scales.medium;
+}
+
+function getEnjoyParticles(mode, type, icon) {
+  if (mode === 'feed') {
+    const feedIcons = { fish: '🐟', milk: '🥛', treat: '🍬', cake: '🎂' };
+    return [icon || feedIcons[type] || '♥', '💕', '✨', '♡', '♥'];
+  }
+
+  const playIcons = { ball: '🎾', yarn: '🧶', laser: '🔴', free: '🐾' };
+  return [playIcons[type] || '🐾', '💕', '✨', '🐾', '♥'];
+}
+
+function spawnEnjoyParticles(layer, mode, type, icon, reduceMotion) {
+  if (!layer) return;
+  layer.replaceChildren();
+  const chars = getEnjoyParticles(mode, type, icon);
+  const count = reduceMotion ? 3 : 6;
+  const baseX = mode === 'feed' ? 31 : 34;
+  const baseY = mode === 'feed' ? 54 : 50;
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = `enjoy-particle enjoy-particle-${mode}`;
+    el.textContent = chars[Math.floor(Math.random() * chars.length)];
+    el.style.left = `${baseX + Math.random() * 24}%`;
+    el.style.top = `${baseY + Math.random() * 22}%`;
+    el.style.setProperty('--tx', `${Math.random() * 84 - 42}px`);
+    el.style.setProperty('--ty', `${-(34 + Math.random() * 54)}px`);
+    el.style.setProperty('--tr', `${Math.random() * 60 - 30}deg`);
+    el.style.animationDelay = `${i * 44}ms`;
+    layer.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+}
+
+function getEnjoyFrames(mode, type, scale) {
+  if (mode === 'feed') {
+    return [
+      { transform: `translateY(0) rotate(0deg) scale(${scale})` },
+      { transform: `translateY(5px) rotate(-1deg) scale(${scale * 1.04})`, offset: .34 },
+      { transform: `translateY(-4px) rotate(1deg) scale(${scale * 1.08})`, offset: .68 },
+      { transform: `translateY(0) rotate(0deg) scale(${scale})` }
+    ];
+  }
+
+  if (type === 'free') {
+    return [
+      { transform: `translateX(0) translateY(0) rotate(0deg) scale(${scale})` },
+      { transform: `translateX(-5px) translateY(-3px) rotate(-2deg) scale(${scale * 1.05})`, offset: .35 },
+      { transform: `translateX(5px) translateY(-2px) rotate(2deg) scale(${scale * 1.05})`, offset: .7 },
+      { transform: `translateX(0) translateY(0) rotate(0deg) scale(${scale})` }
+    ];
+  }
+
+  return [
+    { transform: `translateY(0) rotate(0deg) scale(${scale})` },
+    { transform: `translateY(-10px) rotate(-2deg) scale(${scale * 1.08})`, offset: .38 },
+    { transform: `translateY(-2px) rotate(2deg) scale(${scale * 1.03})`, offset: .72 },
+    { transform: `translateY(0) rotate(0deg) scale(${scale})` }
+  ];
+}
+
+function triggerCatEnjoy(mode, type, icon) {
+  const isFeed = mode === 'feed';
+  const stage = document.querySelector(isFeed ? '#ip-feed .interaction-cat-stage' : '#ip-play .interaction-cat-stage');
+  const img = document.getElementById(isFeed ? 'cat-feed-img' : 'cat-play-img');
+  const layer = document.getElementById(isFeed ? 'feed-enjoy-effects' : 'play-enjoy-effects');
+  if (!stage || !img || !layer) return;
+
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scale = getCatScale();
+  const breed = S.breed || 'orange';
+  const happy = `./assets/images/${breed}2.webp`;
+  const normal = `./assets/images/${breed}1.webp`;
+
+  clearTimeout(stage._enjoyTimer);
+  img.getAnimations?.().forEach(animation => animation.cancel());
+  stage.classList.remove('is-enjoying', 'is-feed-enjoy', 'is-play-enjoy');
+  void stage.offsetWidth;
+  stage.classList.add('is-enjoying', isFeed ? 'is-feed-enjoy' : 'is-play-enjoy');
+
+  preloadImg(happy);
+  img.src = happy;
+  img.style.transform = `scale(${scale})`;
+
+  if (!reduceMotion && img.animate) {
+    img.animate(getEnjoyFrames(mode, type, scale), {
+      duration: isFeed ? 760 : 820,
+      easing: 'cubic-bezier(0.23, 1, 0.32, 1)'
+    });
+  }
+
+  spawnEnjoyParticles(layer, mode, type, icon, reduceMotion);
+
+  stage._enjoyTimer = setTimeout(() => {
+    img.src = normal;
+    img.style.transform = `scale(${scale})`;
+    stage.classList.remove('is-enjoying', 'is-feed-enjoy', 'is-play-enjoy');
+    layer.replaceChildren();
+  }, reduceMotion ? 430 : 940);
+}
+
 function feed(type) {
   const cfg = {
     fish: { aff: 5, name: '小鱼干', icon: '🐟' },
@@ -263,6 +368,7 @@ function feed(type) {
 
   addAff(c.aff);
   updateHUD(); save();
+  triggerCatEnjoy('feed', type, c.icon);
   toast(`${c.icon} ${c.name}已喂给${S.name || '猫咪'} · 库存 -1`);
   updateBubble();
 }
@@ -274,6 +380,7 @@ function play(type) {
   if (c.need) S.items[c.need]--;
   addAff(c.aff);
   updateHUD(); save();
+  triggerCatEnjoy('play', type);
   toast(`玩耍中～好感 +${c.aff}♥`);
 }
 

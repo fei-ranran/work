@@ -811,6 +811,25 @@
       pointer-events: none;
     }
 
+    .interaction-cat-stage::after {
+      content: '';
+      position: absolute;
+      left: 25%;
+      bottom: 18px;
+      width: 132px;
+      height: 70px;
+      border-radius: 999px;
+      background: radial-gradient(ellipse, rgba(255, 214, 148, 0.26) 0%, rgba(255, 214, 148, 0.11) 48%, rgba(255, 214, 148, 0) 72%);
+      opacity: 0;
+      transform: translateX(-50%) scale(0.96);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .interaction-cat-stage.is-enjoying::after {
+      animation: enjoy-glow 820ms var(--ease-out) forwards;
+    }
+
     .interaction-cat-img {
       width: 104px;
       height: auto;
@@ -819,6 +838,64 @@
       filter: drop-shadow(0 8px 10px rgba(61, 32, 16, 0.14));
       position: relative;
       z-index: 1;
+      will-change: transform;
+    }
+
+    .interaction-effect-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      overflow: hidden;
+    }
+
+    .enjoy-particle {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      font-size: 18px;
+      line-height: 1;
+      opacity: 0;
+      transform: translate(-50%, -50%) translate(0, 8px) scale(0.92) rotate(0deg);
+      filter: drop-shadow(0 3px 6px rgba(61, 32, 16, 0.16));
+      animation: enjoy-float 760ms var(--ease-out) forwards;
+      will-change: transform, opacity;
+    }
+
+    .enjoy-particle-play {
+      font-size: 19px;
+    }
+
+    @keyframes enjoy-glow {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.92);
+      }
+
+      28% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateX(-50%) scale(1.08);
+      }
+    }
+
+    @keyframes enjoy-float {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translate(0, 8px) scale(0.92) rotate(0deg);
+      }
+
+      18% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(1.08) rotate(var(--tr));
+      }
     }
 
     .interaction-cat-copy {
@@ -830,6 +907,33 @@
       line-height: 1.45;
       position: relative;
       z-index: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .interaction-cat-stage.is-enjoying::after {
+        animation: none;
+        opacity: 0.18;
+      }
+
+      .enjoy-particle {
+        animation: enjoy-soft-fade 260ms ease forwards;
+      }
+    }
+
+    @keyframes enjoy-soft-fade {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.98);
+      }
+
+      45% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+      }
     }
 
     /* Feed panel */
