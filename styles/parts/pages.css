@@ -984,24 +984,35 @@
     }
 
     .fc-bottom {
-      display: flex;
-      align-items: center;
+      display: grid;
       gap: 6px;
-      flex-wrap: wrap;
-      justify-content: center;
+      justify-items: center;
       width: 100%;
     }
 
-    .fc-use {
+    .fc-use,
+    .fc-aff {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      max-width: 100%;
+      padding: 4px 8px;
+      border-radius: 999px;
       font-size: 11px;
       font-weight: 800;
-      color: var(--brown3)
+      line-height: 1.25;
+      text-align: center;
     }
 
     .fc-aff {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--rose)
+      color: var(--rose);
+      background: rgba(201, 117, 96, 0.10);
+    }
+
+    .fc-use {
+      color: var(--brown3);
+      background: rgba(185, 143, 112, 0.10);
     }
 
     .fc-stock {
@@ -1460,35 +1471,6 @@
     }
 
     .sz-btn.on {
-      border-color: var(--orange);
-      color: var(--orange);
-      background: rgba(200, 113, 74, 0.06)
-    }
-
-    /* voice btns */
-    .voice-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap
-    }
-
-    .vc-btn {
-      flex: 1;
-      min-width: 70px;
-      padding: 8px;
-      border: 1.5px solid var(--cream3);
-      border-radius: var(--r);
-      background: none;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 11px;
-      cursor: pointer;
-      transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) var(--ease-out), background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, color var(--motion-fast) ease, box-shadow var(--motion-fast) var(--ease-out);
-      color: var(--brown3);
-      text-align: center;
-    }
-
-    .vc-btn.on {
       border-color: var(--orange);
       color: var(--orange);
       background: rgba(200, 113, 74, 0.06)

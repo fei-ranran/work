@@ -229,7 +229,6 @@
 
     body.night .itab,
     body.night .sz-btn,
-    body.night .vc-btn,
     body.night .sess {
       color: rgba(255, 240, 210, 0.66);
       border-color: rgba(255, 240, 210, 0.12);
@@ -237,7 +236,6 @@
 
     body.night .itab.on,
     body.night .sz-btn.on,
-    body.night .vc-btn.on,
     body.night .sess.on {
       background: rgba(255, 240, 210, 0.12);
       color: rgba(255, 240, 210, 0.94);
@@ -261,6 +259,15 @@
     body.night .interaction-cat-copy,
     body.night .fc-use {
       color: rgba(255, 240, 210, 0.68);
+    }
+
+    body.night .fc-use {
+      background: rgba(255, 240, 210, 0.08);
+    }
+
+    body.night .fc-aff {
+      color: #F3A896;
+      background: rgba(243, 168, 150, 0.13);
     }
 
     body.night .fc-stock,

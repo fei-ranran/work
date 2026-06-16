@@ -3,7 +3,7 @@ const DEF = {
   coins: 50, aff: 10, name: '小橘',
   cc: '#C8714A', cb: '#F5DDB8', ci: '#F0A898', ce: '#5B9EE8',
   breed: 'orange',
-  size: 'medium', voice: 'cute',
+  size: 'medium',
   items: { fish: 3, milk: 2, treat: 0, cake: 0, ball: 1, yarn: 0, laser: 0, bow: 0, crown: 0, bed: 0 },
   petCount: 0, lastDate: '', streak: 0,
   notes: '', alarms: [], tasks: {},

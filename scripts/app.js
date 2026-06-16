@@ -133,8 +133,7 @@ function setTimeTheme() {
 // ── SPEECH BUBBLE ──
 function updateBubble() {
   const level = getLevel();
-  const voice = S.voice || 'cute';
-  const arr = bubbles[voice][level];
+  const arr = bubbles.cute[level];
   const el = document.getElementById('speech-bub');
   if (!el) return;
   el.textContent = arr[Math.floor(Math.random() * arr.length)];
@@ -1029,12 +1028,6 @@ function setSize(s, btn) {
   document.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
 }
-function setVoice(v, btn) {
-  S.voice = v; save();
-  document.querySelectorAll('.vc-btn').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  toast('配音风格已更新～'); updateBubble();
-}
 function saveName() {
   const v = document.getElementById('name-inp').value.trim();
   if (!v) return;
@@ -1192,7 +1185,6 @@ function runAction(target, event) {
     case 'buy': buy(target.dataset.item, Number(target.dataset.cost), Number(target.dataset.qty), target.dataset.inv); break;
     case 'set-breed': setBreed(target.dataset.breed, target); break;
     case 'set-size': setSize(target.dataset.size, target); break;
-    case 'set-voice': setVoice(target.dataset.voice, target); break;
     case 'save-name': saveName(); break;
     case 'switch-screen': switchScreen(target.dataset.screen, target); break;
     case 'dev-reset': devReset(); break;
